@@ -1,41 +1,67 @@
-const express = require('express');
-const userModel = require('../models/userModel');
+const express = require("express");
+const userService = require("../service/userService");
+const { genSaltSync, hashSync } = require("bcrypt");
 
-//const userService = require('../services/userService');
+exports.getAllUsers = async (req, res) => {
+  await userService.getAllUsers((err, data) => {
+    if (err) res.status(400).send(err);
+    res.status(200).send(data);
+  });
+};
 
+exports.getUserByUserName = async (req, res) => {
+  await userService.getUserByID(req.params.uname, (err, data) => {
+    if (err) {
+      res.status(400).send("failed");
+    }
+    res.status(200).send(data);
+  });
+};
 
+exports.createNewUser = async (req, res) => {
+  const { username, email, password } = await req.body;
 
-// exports.getUsers = ((req, res) => {
-//     res.send('Get all users');
-// });
+  console.log(username);
+  if (!username || !email || !password) {
+    return res.status(400).send({ message: "Invalid request body" });
+  }
 
+  // console.log("req"+req.body)
+  await userService.createUser(username, email, password, (err, data) => {
+    if (err) {
+      res.status(400).send(err.message);
+    }
+    res.status(200).send("User created successfully");
+  });
+};
 
-exports.getUsers = (req, res)=> {
-    //console.log('here all employees list');
-    userModel.getallUsers((err, users) =>{
-        console.log('We are here');
-        if(err)
-        res.send(err);
-        console.log('USERS -', users);
-        res.send(users);
-    })
-}
+exports.updateUser = (req, res) => {
+  const body = req.body;
+  const userName = req.params.uname.toLowerCase();
+  if (req.params.uname.includes(" ")) {
+    return res.status(401).json({
+      success: 0,
+      data: "Parameter contains space character",
+    });
+  }
 
+  const salt = genSaltSync(10);
+  body.password = hashSync(body.password, salt);
 
-exports.getIndUser = ((req, res) => {
-    res.send('Getting user ' + req.params.id);
-})
+  userService.updateUser(userName, body, (err, results, data) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    return res.status(200).send("Üser updated successfully");
+  });
+};
 
-
-exports.createUser = ((req, res) => {
-    res.send('A user is successfully created!');
-});
-
-
-exports.updateUser = async (req, res, next) => {
-    await res.send('Updated user');
-}
-
-exports.deleteUser = ((req, res) => {
-    res.send('This user is updated!');
-});
+exports.deleteSingleUser = async (req, res) => {
+  await userService.deleteOneUser(req.params.uname, (err, data) => {
+    if (err) {
+      res.status(400).send("Deletion failed");
+    }
+    res.status(200).send("User deleted successfully");
+  });
+};
