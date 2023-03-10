@@ -1,19 +1,13 @@
-class UserDTO {
-  constructor(user) {
-    this.users = [];
+class UserDTO{
+    constructor(user) {
+        this.id = user.id;
+        this.username = user.username;
+        this.email = user.email;
+        this.createdAt = user.createdAt;
+        this.updatedAt = user.updatedAt;
 
-    for (var i = 0; i < user.length; i++) {
-      var obj = {
-        id: user[i]["id"],
-        username: user[i]["username"],
-        email: user[i]["email"],
-        cdate: user[i]["cdate"],
-        udate: user[i]["udate"],
-      };
-      this.users.push(obj);
+        console.log(this.username);
     }
   }
-}
 
-//export default UserDTO;
-module.exports = UserDTO;
+  module.exports = UserDTO;

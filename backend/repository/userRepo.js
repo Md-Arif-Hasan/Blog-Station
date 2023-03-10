@@ -1,131 +1,77 @@
-//const dbcon = require("../db.config");
 const express = require("express");
 const db = require("../db.config");
 const UserDTO = require("../DTO/userDTO");
 
-exports.getAllUsers = async (callBack) => {
-  try {
-    db.query("SELECT * FROM users", (err, results, fields) => {
-      if (err) callBack(err, null);
-      results = results.map((v) => Object.assign({}, v));
-      const userDTO = new UserDTO(results);
-      return callBack(null, userDTO.users);
+function executeQuery(sql, params) {
+  return new Promise((resolve, reject) => {
+    db.query(sql, params, (error, results) => {
+      if (error) {
+        console.log(error.sqlMessage);
+        reject(error);
+      } else {
+        resolve(results);
+      }
     });
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  });
+}
+
+exports.getAllUsers = async () => {
+  const query = "SELECT * FROM users";
+  const result = await executeQuery(query);
+
+  const allUsers = [];
+
+  result.forEach((element) => {
+    allUsers.push(new UserDTO(element));
+  });
+  return allUsers;
 };
 
-exports.getUser = async (username, callBack) => {
-  //console.log(username);
-  try {
-    db.query(
-      "SELECT * FROM users where username=?",
-      [username],
-      (err, results, fields) => {
-        if (err) callBack(err, null);
-        results = results.map((v) => Object.assign({}, v));
+exports.getUserByUserName = async (username) => {
+  const query = "SELECT * FROM users where username=?";
+  const result = await executeQuery(query, [username]);
 
-        const userDTO = new UserDTO(results);
-        return callBack(null, userDTO.users[0]);
-      }
-    );
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const user = [];
+
+  result.forEach((element) => {
+    user.push(new UserDTO(element));
+  });
+  return user;
 };
 
-exports.create = async (
-  myUuid,
-  username,
-  email,
-  hashedPassword,
-  callBack
-) => {
-  try {
-    db.query(
-      "INSERT INTO users(id,username, email, password) values(?,?,?,?)",
-      [myUuid, username, email, hashedPassword],
-      (err, results, fields) => {
-        if (err) {
-         // console.log("User creation faileeddddd", err);
-          callBack(err, null);
-        }
-        else {
-         // console.log("User created successfully");
-          callBack(null, results);
-        }
-      }
-    );
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+exports.createUser = async (myUuid, username, email, hashedPassword) => {
+  const query =
+    "INSERT INTO users(id,username, email, password) values(?,?,?,?)";
+  const result = await executeQuery(query, [
+    myUuid,
+    username,
+    email,
+    hashedPassword,
+  ]);
+  return result;
 };
 
-exports.updateUser = async (username, data, callBack) => {
-  //console.log(username);
-  try {
-    db.query(
-      `update users set Password=? where Username = ?`,
-      [data.password, username],
-      (err, results, fields) => {
-        if (err) {
-          console.log("User update failed", err);
-          callBack(err, null);
-        }
-        else {
-          callBack(null, results);
-        }
-      }
-    );
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+exports.updateUser = async (username, hashedPassword) => {
+  const query = "update users set password=? where username = ?";
+  const result = await executeQuery(query, [hashedPassword, username]);
+  return result;
 };
 
-exports.deleteUser = async (username, callBack) => {
-  //console.log(username);
-  try {
-    db.query(
-      `delete from users where username = ?`,
-      [username.toLowerCase()],
-      (err, results, fields) => {
-        if (err) callBack(err, null);
-        // results = results.map(v => Object.assign({}, v));
-        return callBack(null, results);
-      }
-    );
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+exports.deleteUser = async (username) => {
+  const query = "delete from users where username = ?";
+  const result = await executeQuery(query, [username]);
+  return result;
 };
 
-// exports.existEmail = async (email, callBack) => {
-//   console.log(email);
-//   try {
-//     db.query(
-//       "SELECT * FROM users where email = ?",
-//       [email],
-//       (err, results, fields) => {
-//         if (err) {
-//           console.log("repo"+err);
-//           callBack(err, null);
-//         }
-//         console.log("repo"+results);
+exports.checkUsername = async (username) => {
+  const query = "SELECT * FROM users where username=?";
+  const result = await executeQuery(query, [username]);
+  return result;
+};
 
-//         results = results.map((v) => Object.assign({}, v));
+exports.checkEmail = async (email) => {
+  const query = "SELECT * FROM users where email=?";
+  const result = await executeQuery(query, [email]);
+  return result;
+};
 
-//         const userDTO = new UserDTO(results);
-//          callBack(null, userDTO.users[0]);
-//       }
-//     );
-//   } catch (err) {
-//     console.log(err.stack);
-//     throw err;
-//   }
-// };
