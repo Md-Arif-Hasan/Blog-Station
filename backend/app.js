@@ -10,5 +10,5 @@ app.listen(PORT, () => {
   console.log(`Blog station user service is listening on port ${PORT}`);
 });
 
-app.use("/", index);
+app.use("/api/v1/", index);
 module.exports = app;

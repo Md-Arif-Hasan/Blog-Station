@@ -1,77 +1,114 @@
-const express = require("express");
-const db = require("../db.config");
 const UserDTO = require("../DTO/userDTO");
-
-function executeQuery(sql, params) {
-  return new Promise((resolve, reject) => {
-    db.query(sql, params, (error, results) => {
-      if (error) {
-        console.log(error.sqlMessage);
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
+const User = require("../models/userModel");
 
 exports.getAllUsers = async () => {
-  const query = "SELECT * FROM users";
-  const result = await executeQuery(query);
-
-  const allUsers = [];
-
-  result.forEach((element) => {
-    allUsers.push(new UserDTO(element));
-  });
-  return allUsers;
+  try {
+    const data = await User.findAll();
+    const allUsers = [];
+    data.forEach((element) => {
+      allUsers.push(new UserDTO(element));
+    });
+    return allUsers;
+  } catch (err) {
+    console.log(err.stack);
+    throw err;
+  }
 };
 
 exports.getUserByUserName = async (username) => {
-  const query = "SELECT * FROM users where username=?";
-  const result = await executeQuery(query, [username]);
+  try{
+    const data = await User.findAll({
+      where: {
+        username: username,
+      },
+    });
+    const user = [];
+    data.forEach((element) => {
+      user.push(new UserDTO(element));
+    });
+    return user;
+  }
+  catch(err){
+    console.log(err.stack);
+    throw err;
+  }
 
-  const user = [];
-
-  result.forEach((element) => {
-    user.push(new UserDTO(element));
-  });
-  return user;
 };
 
 exports.createUser = async (myUuid, username, email, hashedPassword) => {
-  const query =
-    "INSERT INTO users(id,username, email, password) values(?,?,?,?)";
-  const result = await executeQuery(query, [
-    myUuid,
-    username,
-    email,
-    hashedPassword,
-  ]);
-  return result;
+  try{
+    const user = await User.create({
+      id: myUuid,
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
+    return user;
+  }
+  catch(err){
+    console.log(err.stack);
+    throw err;
+  }
+ 
 };
 
 exports.updateUser = async (username, hashedPassword) => {
-  const query = "update users set password=? where username = ?";
-  const result = await executeQuery(query, [hashedPassword, username]);
-  return result;
+  try{
+    const user = await User.update(
+      { password: hashedPassword },
+      {
+        where: {
+          username: username,
+        },
+      }
+    );
+    return user;
+  } catch(err){
+    console.log(err.stack);
+    throw err;
+  }
+
 };
 
 exports.deleteUser = async (username) => {
-  const query = "delete from users where username = ?";
-  const result = await executeQuery(query, [username]);
-  return result;
+  try{
+    const user = await User.destroy({
+      where: {
+        username: username,
+      },
+    });
+    return user;
+  } catch(err){
+    console.log(err.stack);
+    throw err;
+  }
+
 };
 
 exports.checkUsername = async (username) => {
-  const query = "SELECT * FROM users where username=?";
-  const result = await executeQuery(query, [username]);
-  return result;
+  try{
+    const data = await User.findAll({
+      where: {
+        username: username,
+      },
+    });
+    return data;
+  } catch(err){
+    console.log(err.stack);
+    throw err;
+  }
+
 };
 
 exports.checkEmail = async (email) => {
-  const query = "SELECT * FROM users where email=?";
-  const result = await executeQuery(query, [email]);
-  return result;
+  try{
+    const data = await User.findAll({
+      where: {
+        email: email,
+      },
+    });
+    return data;
+  } catch(err){
+    console.log(err.stack);
+  }
 };
-
