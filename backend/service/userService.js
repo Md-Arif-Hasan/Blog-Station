@@ -2,7 +2,6 @@ const userRepo = require("../repository/userRepo");
 const crypto = require("crypto");
 const userInfo = require("../utils/userInfoValidation");
 const password = require("../utils/hashingPassword");
-const duplicateUtils = require("../utils/duplicateValidation");
 
 exports.getAllUsers = async () => {
   try {
@@ -32,19 +31,9 @@ exports.getUserByUserName = async (username) => {
 exports.createUser = async (body) => {
   const infoValid = userInfo.userInfoValidation(
     body.username,
-    body.email,
     body.password
   );
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
-  const duplicateUsername = duplicateUtils.userNameDuplicate(body.username);
-  if ((await duplicateUsername).exist) {
-    return { status: 422, message: (await duplicateUsername).message };
-  }
-
-  const duplicateEmail = duplicateUtils.emailDuplicate(body.email);
-  if ((await duplicateEmail).exist) {
-    return { status: 422, message: (await duplicateEmail).message };
-  }
 
   const myUuid = crypto.randomUUID();
   const username = body.username.toLowerCase();

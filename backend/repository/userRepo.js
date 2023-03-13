@@ -32,7 +32,6 @@ exports.getUserByUserName = async (username) => {
     console.log(err.stack);
     throw err;
   }
-
 };
 
 exports.createUser = async (myUuid, username, email, hashedPassword) => {
@@ -49,7 +48,6 @@ exports.createUser = async (myUuid, username, email, hashedPassword) => {
     console.log(err.stack);
     throw err;
   }
- 
 };
 
 exports.updateUser = async (username, hashedPassword) => {
@@ -67,7 +65,6 @@ exports.updateUser = async (username, hashedPassword) => {
     console.log(err.stack);
     throw err;
   }
-
 };
 
 exports.deleteUser = async (username) => {
@@ -82,7 +79,6 @@ exports.deleteUser = async (username) => {
     console.log(err.stack);
     throw err;
   }
-
 };
 
 exports.checkUsername = async (username) => {
@@ -97,7 +93,6 @@ exports.checkUsername = async (username) => {
     console.log(err.stack);
     throw err;
   }
-
 };
 
 exports.checkEmail = async (email) => {
