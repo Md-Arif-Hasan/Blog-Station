@@ -27,7 +27,9 @@ exports.login = async (req, res) => {
     if(!req.body){
       res.status(400).send("Bad request");
     }
-    const loggedInUser = await authService.login(req.body);
+     
+    const flag = false;
+    const loggedInUser = await authService.login(req.body,flag);
     if (loggedInUser) {
       const accessToken = JWTToken.createJwtToken(loggedInUser, res);
 

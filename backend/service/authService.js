@@ -1,4 +1,3 @@
-const userRepo = require("../repository/userRepo");
 const password = require("../utils/hashingPassword");
 const userInfo = require("../utils/userInfoValidation");
 const userService = require("../service/userService");
@@ -15,19 +14,19 @@ exports.register = async (user) => {
   }
 };
 
-exports.login = async (user) => {
+exports.login = async (user, flag) => {
   try {
     const infoValid = userInfo.userInfoValidation(user.username, user.password);
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUserName(username);
-    if (checkedUser) {
+    const checkedUser = await userService.getUserByUserName(username, flag);
+
+    if (checkedUser.message) {
       const isPasswordMatched = await password.checkPassword(
         user.password,
-        checkedUser.password
+        checkedUser.message.password
       );
-
       if (!isPasswordMatched) {
         return false;
       }
@@ -38,7 +37,7 @@ exports.login = async (user) => {
   } catch (error) {
     return {
       status: 401,
-      message: `It's a ${error.name}`,
+      message: `${error.errors[0].message} It's a ${error.name}`,
     };
   }
 };

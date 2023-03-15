@@ -2,6 +2,7 @@ const userRepo = require("../repository/userRepo");
 const crypto = require("crypto");
 const userInfo = require("../utils/userInfoValidation");
 const password = require("../utils/hashingPassword");
+const userDTO = require("../DTO/userDTO");
 
 exports.getAllUsers = async () => {
   try {
@@ -15,20 +16,25 @@ exports.getAllUsers = async () => {
   }
 };
 
-exports.getUserByUserName = async (username) => {
+exports.getUserByUserName = async (username, flag) => {
   try {
     const data = await userRepo.getUserByUserName(username);
     if (data.length == 0) {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
-    return { status: 200, message: data };
+    if(!flag){
+      return { status: 200, message: data };
+    } else{
+
+      return { status: 200, message: new userDTO(data) };
+    }
   } catch (error) {
-    console.log("err" + err);
     return { status: 404, message: `${error.errors[0].message}` };
   }
 };
 
 exports.createUser = async (body) => {
+
   const infoValid = userInfo.userInfoValidation(body.username, body.password);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
@@ -56,7 +62,7 @@ exports.updateUser = async (username, body) => {
     }
     return { status: 200, message: "User updated successfully" };
   } catch (error) {
-    return { status: 401, message: `${error.errors[0].message}` };
+   return { status: 401, message: `${error.errors[0].message}` };
   }
 };
 
