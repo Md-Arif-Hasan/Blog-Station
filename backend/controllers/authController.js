@@ -5,6 +5,9 @@ dotenv.config();
 
 exports.register = async (req, res) => {
   try {
+    if(!req.body){
+      res.status(400).send("Bad request");
+    }
     const registeredUser = await authService.register(req.body);
     if (registeredUser) {
       const accessToken = JWTToken.createJwtToken(registeredUser, res);
@@ -15,12 +18,15 @@ exports.register = async (req, res) => {
       res.status(400).send("Please try to register again");
     }
   } catch (err) {
-    res.status(400).send("An error occured!");
+    res.status(400).send("Error!");
   }
 };
 
 exports.login = async (req, res) => {
   try {
+    if(!req.body){
+      res.status(400).send("Bad request");
+    }
     const loggedInUser = await authService.login(req.body);
     if (loggedInUser) {
       const accessToken = JWTToken.createJwtToken(loggedInUser, res);
@@ -31,6 +37,6 @@ exports.login = async (req, res) => {
       res.status(400).send("Incorrect username or password");
     }
   } catch (err) {
-    res.status(400).send("An error occured!");
+    res.status(400).send("Error!");
   }
 };

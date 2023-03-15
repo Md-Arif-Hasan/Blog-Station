@@ -1,17 +1,16 @@
 const userRepo = require("../repository/userRepo");
 const password = require("../utils/hashingPassword");
 const userInfo = require("../utils/userInfoValidation");
+const userService = require("../service/userService");
 
 exports.register = async (user) => {
   try {
-    const infoValid = userInfo.userInfoValidation(user.username, user.password);
-    if (!infoValid.validity) return { status: 400, message: infoValid.message };
-    const result = await userRepo.register(user);
+    const result = await userService.createUser(user);
     return result;
   } catch (error) {
     return {
       status: 400,
-      message: `${error.errors[0].message} It's a ${error.name}`,
+      message: ` It's a ${error.name}`,
     };
   }
 };
@@ -22,7 +21,7 @@ exports.login = async (user) => {
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userRepo.checkUsername(username);
+    const checkedUser = await userService.getUserByUserName(username);
     if (checkedUser) {
       const isPasswordMatched = await password.checkPassword(
         user.password,
@@ -39,7 +38,7 @@ exports.login = async (user) => {
   } catch (error) {
     return {
       status: 401,
-      message: `${error.errors[0].message} It's a ${error.name}`,
+      message: `It's a ${error.name}`,
     };
   }
 };

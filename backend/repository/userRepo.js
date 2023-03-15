@@ -25,7 +25,7 @@ exports.getUserByUserName = async (username) => {
     });
     const user = [];
     data.forEach((element) => {
-      user.push(new UserDTO(element));
+      user.push(new registerDTO(element));
     });
     return user;
   } catch (err) {
@@ -34,16 +34,33 @@ exports.getUserByUserName = async (username) => {
   }
 };
 
-exports.register = async (user) => {
-  const userToRegister = new registerDTO(user);
-  try {
-    const user = await User.create(userToRegister);
+exports.createUser = async (myUuid, username, email, hashedPassword) => {
+  try{
+    const user = await User.create({
+      id: myUuid,
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
     return user;
-  } catch (err) {
+  }
+  catch(err){
     console.log(err.stack);
     throw err;
   }
 };
+
+
+// exports.register = async (user) => {
+//   const userToRegister = new registerDTO(user);
+//   try {
+//     const user = await User.create(userToRegister);
+//     return user;
+//   } catch (err) {
+//     console.log(err.stack);
+//     throw err;
+//   }
+// };
 
 exports.updateUser = async (username, hashedPassword) => {
   try {
