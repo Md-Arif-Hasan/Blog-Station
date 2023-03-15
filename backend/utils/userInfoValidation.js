@@ -24,5 +24,5 @@ function userInfoValidation(username,password) {
 module.exports = {
   isValidUsername,
   isValidPassword,
-  userInfoValidation,
+  userInfoValidation
 };

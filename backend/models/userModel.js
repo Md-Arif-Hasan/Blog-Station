@@ -1,5 +1,6 @@
 const sequelize = require("../db.config");
 const { DataTypes } = require("sequelize");
+const { hashingPassword } = require("../utils/hashingPassword");
 
 const User = sequelize.define("users", {
   id: {
@@ -49,8 +50,15 @@ const User = sequelize.define("users", {
         msg:"Please enter your password! "
       },
     },
-  },
-});
+  }
+},{
+  hooks: {
+    beforeCreate: async (user) => {
+      if (user.password) {
+       user.password = await hashingPassword(user.password);
+      }
+  }
+}});
 
 const test = async () => {
   console.log("The table for the User model was just (re)created!");

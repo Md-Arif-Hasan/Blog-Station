@@ -10,7 +10,7 @@ exports.getAllUsers = async () => {
       return { status: 404, message: "No data in users table!" };
     }
     return { status: 200, message: fetchedUsers };
-  } catch(error) {
+  } catch (error) {
     return { status: 404, message: `${error.errors[0].message}` };
   }
 };
@@ -22,17 +22,14 @@ exports.getUserByUserName = async (username) => {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
     return { status: 200, message: data };
-  } catch(error) {
-        console.log("err"+err);
-    return { status: 404, message:  `${error.errors[0].message}`};
+  } catch (error) {
+    console.log("err" + err);
+    return { status: 404, message: `${error.errors[0].message}` };
   }
 };
 
 exports.createUser = async (body) => {
-  const infoValid = userInfo.userInfoValidation(
-    body.username,
-    body.password
-  );
+  const infoValid = userInfo.userInfoValidation(body.username, body.password);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
   const myUuid = crypto.randomUUID();
@@ -42,8 +39,11 @@ exports.createUser = async (body) => {
   try {
     await userRepo.createUser(myUuid, username, body.email, hashedPassword);
     return { status: 200, message: "User created successfully" };
-  } catch (error){
-    return { status: 401, message: `${error.errors[0].message} It's a ${error.name}` };
+  } catch (error) {
+    return {
+      status: 401,
+      message: `${error.errors[0].message} It's a ${error.name}`,
+    };
   }
 };
 
@@ -55,7 +55,7 @@ exports.updateUser = async (username, body) => {
       return { status: 404, message: "User not found!" };
     }
     return { status: 200, message: "User updated successfully" };
-  } catch(error) {
+  } catch (error) {
     return { status: 401, message: `${error.errors[0].message}` };
   }
 };
@@ -66,7 +66,7 @@ exports.deleteUser = async (username) => {
     if (result == 1)
       return { status: 200, message: "User deleted successfully" };
     else return { status: 404, message: "User not found" };
-  } catch(error) {
-    return { status: 404, message:`${error.errors[0].message}` };
+  } catch (error) {
+    return { status: 404, message: `${error.errors[0].message}` };
   }
 };

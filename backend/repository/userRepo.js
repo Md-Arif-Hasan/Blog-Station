@@ -1,4 +1,5 @@
 const UserDTO = require("../DTO/userDTO");
+const registerDTO = require("../DTO/registerDTO");
 const User = require("../models/userModel");
 
 exports.getAllUsers = async () => {
@@ -16,7 +17,7 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUserByUserName = async (username) => {
-  try{
+  try {
     const data = await User.findAll({
       where: {
         username: username,
@@ -27,31 +28,25 @@ exports.getUserByUserName = async (username) => {
       user.push(new UserDTO(element));
     });
     return user;
-  }
-  catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
-exports.createUser = async (myUuid, username, email, hashedPassword) => {
-  try{
-    const user = await User.create({
-      id: myUuid,
-      username: username,
-      email: email,
-      password: hashedPassword,
-    });
+exports.register = async (user) => {
+  const userToRegister = new registerDTO(user);
+  try {
+    const user = await User.create(userToRegister);
     return user;
-  }
-  catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
 exports.updateUser = async (username, hashedPassword) => {
-  try{
+  try {
     const user = await User.update(
       { password: hashedPassword },
       {
@@ -60,50 +55,50 @@ exports.updateUser = async (username, hashedPassword) => {
         },
       }
     );
-    return user;
-  } catch(err){
+    return user[0].dataValues;
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
 exports.deleteUser = async (username) => {
-  try{
+  try {
     const user = await User.destroy({
       where: {
         username: username,
       },
     });
     return user;
-  } catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
 exports.checkUsername = async (username) => {
-  try{
-    const data = await User.findAll({
+  try {
+    const data = await User.findOne({
       where: {
         username: username,
       },
     });
     return data;
-  } catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
 exports.checkEmail = async (email) => {
-  try{
+  try {
     const data = await User.findAll({
       where: {
         email: email,
       },
     });
     return data;
-  } catch(err){
+  } catch (err) {
     console.log(err.stack);
   }
 };

@@ -1,0 +1,6 @@
+HOST="hostname"
+NAME = "app_name"
+SALT = "salt_rounds_without_quotation"
+PORT = "port_number_without_quotation"
+JWT_SECRET = "jwt_secret"
+JWT_EXPIRE = "cookies_expire_duration"
