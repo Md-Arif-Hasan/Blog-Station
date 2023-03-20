@@ -51,7 +51,6 @@ const User = sequelize.define("users", {
     },
   }
 },
-
 );
 
 const test = async () => {

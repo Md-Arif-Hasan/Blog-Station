@@ -15,7 +15,7 @@ exports.getAllUsers = async () => {
   }
 };
 
-exports.getUserByUserName = async (username) => {
+exports.getUserByUsername = async (username) => {
   try {
     const data = await User.findOne({
       where: {

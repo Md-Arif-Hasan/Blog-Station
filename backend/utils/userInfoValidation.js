@@ -13,7 +13,7 @@ function isValidPassword(password) {
 
 function userInfoValidation(username,password) {
   if (!username || !password)
-    return { valid: false, message: "Enter all the fieldsss!" };
+    return { valid: false, message: "Enter all the fields!" };
   if (!isValidUsername(username))
     return { validity: false, message: "Enter a valid username" };
   if (!isValidPassword(password))

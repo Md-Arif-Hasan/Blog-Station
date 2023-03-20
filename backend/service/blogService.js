@@ -1,5 +1,6 @@
 const blogRepo = require("../repository/blogRepo");
 const blogCheck = require("../utils/blogValidation");
+const blogDTO = require("../DTO/blogDTO");
 
 exports.getallBlogs = async () => {
   try {
@@ -16,20 +17,21 @@ exports.getallBlogs = async () => {
 exports.getBlogById = async (blogid) => {
   try {
     const fetchedBlog = await blogRepo.getBlogById(blogid);
+    
     if (fetchedBlog.length == 0) {
       return { status: 404, message: "Thid Blog doesn't exist in database!" };
     }
-    return { status: 200, message: fetchedBlog };
+    return { status: 200, message: new blogDTO(fetchedBlog) };
   } catch (error) {
     return { status: 404, message: `No Blog found` };
   }
 };
 
-exports.createBlog = async (blog) => {
-  // const blogInfoChecker = blogCheck.blogValidation(blog.title, blog.description);
-  // if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
 
-  console.log(blog.title+"   "+blog.description);
+exports.createBlog = async (blog) => {
+  const blogInfoChecker = blogCheck.blogValidation(blog.title, blog.description);
+  if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
+  
   try {
     await blogRepo.createBlog(blog);
     return { status: 200, message: "Blog created successfully" };

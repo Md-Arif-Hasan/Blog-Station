@@ -45,17 +45,17 @@ const Blog = sequelize.define("blogs", {
   },
 });
 
-// User.hasMany(Blog, {
-//   foreignKey: "authorid",
-// });
+User.hasMany(Blog, {
+  foreignKey: "authorid",
+});
 
-// Blog.belongsTo(User, {
-//   foreignKey: "authorid",
-// });
+Blog.belongsTo(User, {
+  foreignKey: "authorid",
+});
 
 const test = async () => {
   console.log("The table 2 for the User model was just (re)created!");
-  await sequelize.sync({ force: true });
+  await sequelize.sync({ force: false });
   console.log("All models 2 were synchronized successfully.");
 };
 test();

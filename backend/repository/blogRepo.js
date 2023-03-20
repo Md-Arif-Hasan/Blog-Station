@@ -39,8 +39,6 @@ exports.createBlog = async (blog) => {
 
 exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
   try {
-    console.log("hello");
-    console.log(updatedTitle+"       "+updatedDescription);
     const result = await Blog.update(
       { title: updatedTitle,
         description: updatedDescription
