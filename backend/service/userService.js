@@ -16,13 +16,13 @@ exports.getAllUsers = async () => {
   }
 };
 
-exports.getUserByUserName = async (username, flag) => {
+exports.getUserByUserName = async (username, usedDTO) => {
   try {
     const data = await userRepo.getUserByUserName(username);
-    if (data.length == 0) {
+    if (!data.length ) {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
-    if(!flag){
+    if(!usedDTO){
       return { status: 200, message: data };
     } else{
 
