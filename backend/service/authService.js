@@ -14,13 +14,13 @@ exports.register = async (user) => {
   }
 };
 
-exports.login = async (user, flag) => {
+exports.login = async (user, usedDTO) => {
   try {
-    const infoValid = userInfo.userInfoValidation(user.username, user.password);
+    const infoValid = userInfo.userInfoValidation(user);
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUserName(username, flag);
+    const checkedUser = await userService.getUserByUserName(username, usedDTO);
 
     if (checkedUser.message) {
       const isPasswordMatched = await password.checkPassword(
