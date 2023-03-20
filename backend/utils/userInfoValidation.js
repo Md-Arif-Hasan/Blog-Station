@@ -11,7 +11,11 @@ function isValidPassword(password) {
   return true;
 }
 
-function userInfoValidation(username,password) {
+function userInfoValidation(user) {
+
+  username = user.username;
+  password = user.password;
+  
   if (!username || !password)
     return { valid: false, message: "Enter all the fields!" };
   if (!isValidUsername(username))
@@ -24,5 +28,5 @@ function userInfoValidation(username,password) {
 module.exports = {
   isValidUsername,
   isValidPassword,
-  userInfoValidation,
+  userInfoValidation
 };

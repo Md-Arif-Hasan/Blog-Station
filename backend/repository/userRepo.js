@@ -16,19 +16,14 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUserByUserName = async (username) => {
-  try{
-    const data = await User.findAll({
+  try {
+    const data = await User.findOne({
       where: {
         username: username,
       },
     });
-    const user = [];
-    data.forEach((element) => {
-      user.push(new UserDTO(element));
-    });
-    return user;
-  }
-  catch(err){
+    return data;
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
@@ -50,60 +45,43 @@ exports.createUser = async (myUuid, username, email, hashedPassword) => {
   }
 };
 
-exports.updateUser = async (username, hashedPassword) => {
-  try{
-    const user = await User.update(
-      { password: hashedPassword },
-      {
-        where: {
-          username: username,
-        },
-      }
+exports.updateUser = async (username, updatedPassword) => {
+  try {
+    const result = await User.update(
+      { password: updatedPassword },
+      { where: { username: username } }
     );
-    return user;
-  } catch(err){
+    return result;
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
 exports.deleteUser = async (username) => {
-  try{
+  try {
     const user = await User.destroy({
       where: {
         username: username,
       },
     });
     return user;
-  } catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
 };
 
-exports.checkUsername = async (username) => {
-  try{
-    const data = await User.findAll({
-      where: {
-        username: username,
-      },
-    });
-    return data;
-  } catch(err){
-    console.log(err.stack);
-    throw err;
-  }
-};
 
 exports.checkEmail = async (email) => {
-  try{
+  try {
     const data = await User.findAll({
       where: {
         email: email,
       },
     });
     return data;
-  } catch(err){
+  } catch (err) {
     console.log(err.stack);
   }
 };
