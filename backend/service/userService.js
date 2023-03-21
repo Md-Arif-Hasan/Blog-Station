@@ -16,16 +16,16 @@ exports.getAllUsers = async () => {
   }
 };
 
-exports.getUserByUsername = async (username, flag) => {
+exports.getUserByUsername = async (username, usedDTO) => {
   try {
-    const data = await userRepo.getUserByUsername(username);
-    if (data.length == 0) {
+    const fetchedUser = await userRepo.getUserByUsername(username);
+    if (fetchedUser.length == 0) {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
-    if(!flag){
-      return { status: 200, message: data };
+    if(!usedDTO){
+      return { status: 200, message: fetchedUser };
     } else{
-      return { status: 200, message: new userDTO(data) };
+      return { status: 200, message: new userDTO(fetchedUser) };
     }
   } catch (error) {
     return { status: 404, message: `${error.errors[0].message}` };

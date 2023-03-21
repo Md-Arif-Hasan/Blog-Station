@@ -1,13 +1,14 @@
 const userService = require("../service/userService");
+const {sendResponse} = require("../utils/contentNegotiation");
 
 exports.getAllUsers = async (req, res) => {
   const data = await userService.getAllUsers();
-  res.status(data.status).send(data.message);
+  return sendResponse(req,res,data.status, data.message);
 };
 
 exports.getUserByUserName = async (req, res) => {
   const data = await userService.getUserByUsername(req.params.username);
-  res.status(data.status).send(data.message);
+  return sendResponse(req,res,data.status, data.message);
 };
 
 exports.createUser = async (req, res) => {

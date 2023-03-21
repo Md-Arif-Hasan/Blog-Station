@@ -29,9 +29,8 @@ exports.getBlogById = async (blogid) => {
 
 
 exports.createBlog = async (blog) => {
-  const blogInfoChecker = blogCheck.blogValidation(blog.title, blog.description);
-  if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
-  
+ const blogInfoChecker = blogCheck.blogValidation(blog.title, blog.description);
+ if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
   try {
     await blogRepo.createBlog(blog);
     return { status: 200, message: "Blog created successfully" };
