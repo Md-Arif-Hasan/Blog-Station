@@ -2,7 +2,7 @@ const blogRepo = require("../repository/blogRepo");
 const blogCheck = require("../utils/blogValidation");
 const blogDTO = require("../DTO/blogDTO");
 
-exports.getallBlogs = async () => {
+exports.getallBlogs = async (req) => {
   try {
     const fetchedBlogs = await blogRepo.getAllBlogs();
     if (fetchedBlogs.length == 0) {
@@ -10,7 +10,7 @@ exports.getallBlogs = async () => {
     }
     return { status: 200, message: fetchedBlogs };
   } catch (error) {
-    return { status: 404, message: `${error.errors[0].message}` };
+    return { status: 404, message: `Unhandled error` };
   }
 };
 
