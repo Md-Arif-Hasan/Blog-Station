@@ -1,8 +1,12 @@
 const Blog = require("../models/blogModel");
+const {paginate} = require("../utils/pagination");
 
-exports.getAllBlogs = async () => {
+exports.getAllBlogs = async (req) => {
   try {
-    const allBlogs = await Blog.findAll();
+
+    const {skip, limit} = paginate(req);
+
+    const allBlogs = await Blog.findAll({offset: skip, limit:limit,  order: [['createdAt','ASC']] });
     return allBlogs;
   } catch (err) {
     console.log(err.stack);

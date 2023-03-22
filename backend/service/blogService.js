@@ -4,7 +4,7 @@ const blogDTO = require("../DTO/blogDTO");
 
 exports.getallBlogs = async (req) => {
   try {
-    const fetchedBlogs = await blogRepo.getAllBlogs();
+    const fetchedBlogs = await blogRepo.getAllBlogs(req);
     if (fetchedBlogs.length == 0) {
       return { status: 404, message: "No blog in users table!" };
     }

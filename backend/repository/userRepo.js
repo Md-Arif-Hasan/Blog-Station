@@ -1,13 +1,16 @@
 const UserDTO = require("../DTO/userDTO");
 const User = require("../models/userModel");
+const { paginate } = require("../utils/pagination");
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (req) => {
   try {
-    const data = await User.findAll();
+    const { skip, limit } = paginate(req);
+    const data = await User.findAll({ offset: skip, limit: limit });
     const allUsers = [];
     data.forEach((element) => {
       allUsers.push(new UserDTO(element));
     });
+
     return allUsers;
   } catch (err) {
     console.log(err.stack);
@@ -30,7 +33,7 @@ exports.getUserByUsername = async (username) => {
 };
 
 exports.createUser = async (myUuid, username, email, hashedPassword) => {
-  try{
+  try {
     const user = await User.create({
       id: myUuid,
       username: username,
@@ -38,8 +41,7 @@ exports.createUser = async (myUuid, username, email, hashedPassword) => {
       password: hashedPassword,
     });
     return user;
-  }
-  catch(err){
+  } catch (err) {
     console.log(err.stack);
     throw err;
   }
@@ -71,7 +73,6 @@ exports.deleteUser = async (username) => {
     throw err;
   }
 };
-
 
 exports.checkEmail = async (email) => {
   try {

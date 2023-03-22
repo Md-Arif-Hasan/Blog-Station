@@ -2,7 +2,7 @@ const userService = require("../service/userService");
 const {sendResponse} = require("../utils/contentNegotiation");
 
 exports.getAllUsers = async (req, res) => {
-  const data = await userService.getAllUsers();
+  const data = await userService.getAllUsers(req);
   return sendResponse(req,res,data.status, data.message);
 };
 

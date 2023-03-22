@@ -2,7 +2,7 @@ const blogService = require("../service/blogService");
 const {sendResponse} = require("../utils/contentNegotiation");
 
 exports.getAllBlogs = async (req, res) => {
-  const data = await blogService.getallBlogs();
+  const data = await blogService.getallBlogs(req);
   return sendResponse(req,res,data.status, data.message);
 };
 
