@@ -1,13 +1,12 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+
 const app = express();
 const dotenv = require('dotenv');
 const index = require('./routes/index');
 
-
 dotenv.config();
 app.use(express.json());
-
 
 const { PORT } = process.env;
 app.listen(PORT, () => {
