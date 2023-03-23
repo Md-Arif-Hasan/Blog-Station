@@ -16,7 +16,7 @@ exports.register = async (user) => {
 
 exports.login = async (user, usedDTO) => {
   try {
-    const infoValid = userInfo.userInfoValidation(user.username, user.password);
+    const infoValid = userInfo.userInfoValidation(user);
 
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
 

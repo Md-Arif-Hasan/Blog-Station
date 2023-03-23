@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     if(!req.body){
       res.status(400).send("Bad request");
     }
-  
+
     const usedDTO = false;
     const loggedInUser = await authService.login(req.body,usedDTO);
 

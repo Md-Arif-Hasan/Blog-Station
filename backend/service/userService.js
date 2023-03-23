@@ -16,6 +16,7 @@ exports.getAllUsers = async (req) => {
   }
 };
 
+
 exports.getUserByUsername = async (username, usedDTO) => {
   try {
     const fetchedUser = await userRepo.getUserByUsername(username);
@@ -24,6 +25,8 @@ exports.getUserByUsername = async (username, usedDTO) => {
     }
     if(!usedDTO){
       return { status: 200, message: fetchedUser };
+
+
     } else{
       return { status: 200, message: new userDTO(fetchedUser) };
     }
@@ -34,7 +37,7 @@ exports.getUserByUsername = async (username, usedDTO) => {
 
 exports.createUser = async (body) => {
 
-  const infoValid = userInfo.userInfoValidation(body.username, body.password);
+  const infoValid = userInfo.userInfoValidation(body);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
   const myUuid = crypto.randomUUID();
