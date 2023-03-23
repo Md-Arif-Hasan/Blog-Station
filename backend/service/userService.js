@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const userRepo = require('../repository/userRepo');
 const userInfo = require('../utils/userInfoValidation');
 const password = require('../utils/hashingPassword');
-const userDTO = require('../DTO/userDTO');
+const UserDTO = require('../DTO/UserDTO');
 
 exports.getAllUsers = async (req) => {
     try {
@@ -25,15 +25,10 @@ exports.getUserByUsername = async (username, usedDTO) => {
         if (!usedDTO) {
             return { status: 200, message: fetchedUser };
         }
-        return { status: 200, message: new userDTO(fetchedUser) };
+        return { status: 200, message: new UserDTO(fetchedUser) };
     } catch (error) {
         return { status: 500, message: `It's a ${error.name}` };
     }
-
-    if (!usedDTO) {
-        return { status: 200, message: fetchedUser };
-    }
-    return { status: 200, message: new userDTO(fetchedUser) };
 };
 
 exports.createUser = async (body) => {

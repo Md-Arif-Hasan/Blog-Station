@@ -1,4 +1,4 @@
-const UserDTO = require('../DTO/userDTO');
+const UserDTO = require('../DTO/UserDTO');
 const User = require('../models/userModel');
 const { paginate } = require('../utils/pagination');
 
@@ -82,4 +82,5 @@ exports.checkEmail = async (email) => {
     } catch (err) {
         console.log(err.stack);
     }
+    return 0;
 };

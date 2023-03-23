@@ -20,6 +20,7 @@ app.use((err, req, res, next) => {
     }
     res.status(500);
     res.send('500: Internal server error');
+    return 0;
 });
 
 app.use('/api/v1/', index);

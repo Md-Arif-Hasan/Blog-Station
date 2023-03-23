@@ -16,11 +16,14 @@ exports.authentication = async (req, res, next) => {
         console.log(err.message);
         return res.status(401).send('Unauthorized user!');
     }
+    return 0;
 };
 
 exports.authorization = async (req, res, next) => {
     const usernameFromToken = req.username;
-    if (usernameFromToken !== req.params.username)
+    if (usernameFromToken !== req.params.username) {
         return res.status(401).send('Unauthorized user detected!');
+    }
     next();
+    return 0;
 };

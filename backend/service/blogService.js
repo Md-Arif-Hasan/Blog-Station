@@ -1,6 +1,6 @@
 const blogRepo = require('../repository/blogRepo');
 const blogCheck = require('../utils/blogValidation');
-const blogDTO = require('../DTO/blogDTO');
+const BlogDTO = require('../DTO/BlogDTO');
 
 exports.getallBlogs = async (req) => {
     try {
@@ -21,7 +21,7 @@ exports.getBlogById = async (blogid) => {
         if (fetchedBlog.length === 0) {
             return { status: 404, message: "Thid Blog doesn't exist in database!" };
         }
-        return { status: 200, message: new blogDTO(fetchedBlog) };
+        return { status: 200, message: new BlogDTO(fetchedBlog) };
     } catch (error) {
         return { status: 404, message: 'No Blog found' };
     }
@@ -47,8 +47,7 @@ exports.updateBlog = async (blogid, blog) => {
             return { status: 400, message: 'Invalid parameter!' };
         }
 
-        title = blog.title;
-        description = blog.description;
+        const { title, description } = blog;
 
         if (!title || !description) {
             return { status: 400, message: 'Invalid request!' };

@@ -4,13 +4,17 @@ const js2Txt = require('json-to-plain-text');
 
 exports.sendJsResponse = (res, statusCode, data) => res.status(statusCode).send(data);
 
-exports.sendXmlResponse = (res, statusCode, data) =>
+exports.sendXmlResponse = (res, statusCode, data) => {
     res.status(statusCode).send(js2xmlparser.parse('data', data));
+    return 0;
+};
 
 exports.sendHtmlResponse = (res, statusCode, data) => res.status(statusCode).send(js2Html(data));
 
-exports.sendTextResponse = (res, statusCode, data) =>
+exports.sendTextResponse = (res, statusCode, data) => {
     res.status(statusCode).send(js2Txt.toPlainText(data));
+    return 0;
+};
 
 exports.sendResponse = (req, res, statusCode, data) => {
     if (req.headers.accept === 'application/xml') {
