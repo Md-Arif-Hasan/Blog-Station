@@ -3,7 +3,7 @@ exports.paginate = (req) => {
 
     pageNo = (isNaN(pageNo) || pageNo <1)? 1 : parseInt(pageNo);
     limit = (isNaN(pageSize) || pageSize <1)? 5 : parseInt(pageSize);
-
-    const offset = pageSize * (pageNo - 1);
+    
+    const offset = limit * (pageNo - 1);
     return { offset, limit};
 };
