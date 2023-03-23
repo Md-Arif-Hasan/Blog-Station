@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');;
+const dotenv = require('dotenv');
 const authService = require('../service/authService');
 const JWTToken = require('../utils/JWTToken');
 
@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
         }
         const registeredUser = await authService.register(req.body);
         if (registeredUser) {
-            const accessToken = JWTToken.createJwtToken(registeredUser, res);
+            const accessToken = JWTToken.createJwtToken(registeredUser);
 
             res.cookie('jwt', accessToken, { httpOnly: true });
             res.send(registeredUser);
@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
         const loggedInUser = await authService.login(req.body, usedDTO);
 
         if (loggedInUser) {
-            const accessToken = JWTToken.createJwtToken(loggedInUser, res);
+            const accessToken = JWTToken.createJwtToken(loggedInUser);
 
             res.cookie('jwt', accessToken, { httpOnly: true });
             res.send(loggedInUser);

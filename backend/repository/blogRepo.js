@@ -1,14 +1,11 @@
+/* eslint-disable prettier/prettier */
 const Blog = require('../models/blogModel');
 const { paginate } = require('../utils/pagination');
 
 exports.getAllBlogs = async (req) => {
     try {
         const { offset, limit } = paginate(req);
-        const allBlogs = await Blog.findAll({
-            offset,
-            limit,
-            order: [['createdAt', 'ASC']],
-        });
+        const allBlogs = await Blog.findAll({ offset, limit, order: [['createdAt', 'ASC']] });
         return allBlogs;
     } catch (err) {
         console.log(err.stack);
@@ -44,7 +41,7 @@ exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
     try {
         const result = await Blog.update(
             { title: updatedTitle, description: updatedDescription },
-            { where: { id: blogid } }
+            { where: { id: blogid } },
         );
         return result;
     } catch (err) {

@@ -11,7 +11,10 @@ function isValidPassword(password) {
     return true;
 }
 
-function userInfoValidation(username, password) {
+function userInfoValidation(user) {
+   const username = user.username;
+   const password = user.password;
+
     if (!username || !password) return { valid: false, message: 'Enter all the fields!' };
     if (!isValidUsername(username)) return { validity: false, message: 'Enter a valid username' };
     if (!isValidPassword(password)) return { validity: false, message: 'Enter a valid password' };
