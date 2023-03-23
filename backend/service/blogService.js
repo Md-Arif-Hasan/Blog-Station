@@ -1,6 +1,6 @@
 const blogRepo = require('../repository/blogRepo');
 const blogCheck = require('../utils/blogValidation');
-const BlogDTO = require('../DTO/BlogDTO');
+const BlogDTO = require('../DTO/blogDTO');
 
 exports.getallBlogs = async (req) => {
     try {

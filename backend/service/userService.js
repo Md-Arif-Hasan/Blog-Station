@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const userRepo = require('../repository/userRepo');
 const userInfo = require('../utils/userInfoValidation');
 const password = require('../utils/hashingPassword');
-const UserDTO = require('../DTO/UserDTO');
+const UserDTO = require('../DTO/userDTO');
 
 exports.getAllUsers = async (req) => {
     try {

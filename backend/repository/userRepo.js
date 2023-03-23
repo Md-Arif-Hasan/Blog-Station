@@ -1,4 +1,4 @@
-const UserDTO = require('../DTO/UserDTO');
+const UserDTO = require('../DTO/userDTO');
 const User = require('../models/userModel');
 const { paginate } = require('../utils/pagination');
 
