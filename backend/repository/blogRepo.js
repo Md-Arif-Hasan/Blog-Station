@@ -3,10 +3,8 @@ const {paginate} = require("../utils/pagination");
 
 exports.getAllBlogs = async (req) => {
   try {
-
-    const {skip, limit} = paginate(req);
-
-    const allBlogs = await Blog.findAll({offset: skip, limit:limit,  order: [['createdAt','ASC']] });
+    const {offset, limit} = paginate(req);
+    const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
     return allBlogs;
   } catch (err) {
     console.log(err.stack);

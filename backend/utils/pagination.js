@@ -1,18 +1,9 @@
 exports.paginate = (req) => {
-  let { page, size } = req.query;
+    let { pageNo, pageSize } = req.query;
 
-  if (!page) page = 0;
-  if (!size) size = 3;
+    pageNo = (isNaN(pageNo) || pageNo <1)? 1 : parseInt(pageNo);
+    limit = (isNaN(pageSize) || pageSize <1)? 5 : parseInt(pageSize);
 
-  let limit = parseInt(size);
-
-  if (limit <= 0 || limit > 3) {
-    limit = 3;
-  }
-  if (page <= 0) {
-    page = 1;
-  }
-
-  let skip = limit * (parseInt(page) - 1);
-  return { skip, limit };
+    const offset = pageSize * (pageNo - 1);
+    return { offset, limit};
 };
