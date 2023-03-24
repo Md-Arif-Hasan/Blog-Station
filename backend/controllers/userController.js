@@ -5,7 +5,7 @@ exports.getAllUsers = async (req, res) => {
   res.status(data.status).send(data.message);
 };
 
-exports.getUserByUserName = async (req, res) => {
+exports.getUserByUsername = async (req, res) => {
   const data = await userService.getUserByUsername(req.params.username);
   res.status(data.status).send(data.message);
 };

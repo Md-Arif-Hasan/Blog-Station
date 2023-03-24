@@ -5,7 +5,7 @@ const blogDTO = require("../DTO/blogDTO");
 exports.getallBlogs = async () => {
   try {
     const fetchedBlogs = await blogRepo.getAllBlogs();
-    if (fetchedBlogs.length == 0) {
+    if (fetchedBlogs.length === 0) {
       return { status: 404, message: "No blog in users table!" };
     }
     return { status: 200, message: fetchedBlogs };
@@ -18,7 +18,7 @@ exports.getBlogById = async (blogid) => {
   try {
     const fetchedBlog = await blogRepo.getBlogById(blogid);
     
-    if (fetchedBlog.length == 0) {
+    if (fetchedBlog.length === 0) {
       return { status: 404, message: "Thid Blog doesn't exist in database!" };
     }
     return { status: 200, message: new blogDTO(fetchedBlog) };
@@ -57,7 +57,7 @@ exports.updateBlog = async (blogid, blog) => {
     }
     const result = await blogRepo.updateBlog(blogid, title, description);
 
-    if (result == 0) {
+    if (result === 0) {
       return { status: 404, message: "Blog not found!" };
     }
     return { status: 200, message: "Blog updated successfully" };
@@ -71,7 +71,7 @@ exports.updateBlog = async (blogid, blog) => {
 exports.deleteBlog = async (blogid) => {
   try {
     const result = await blogRepo.deleteBlog(blogid);
-    if (result == 1)
+    if (result === 1)
       return { status: 200, message: "Blog deleted successfully" };
     else return { status: 404, message: "Blog not found" };
   } catch (error) {
