@@ -8,8 +8,8 @@ const blogController = require('../controllers/blogController');
 router.get('/', blogController.getAllBlogs);
 router.post('/', authentication, blogController.createBlog);
 
-router.get('/:blogid', blogController.getBlogById);
-router.put('/:blogid', authentication, blogMiddleware, blogController.updateBlog);
-router.delete('/:blogid', authentication, blogMiddleware, blogController.deleteBlog);
+router.get('/:blogId', blogController.getBlogById);
+router.put('/:blogId', authentication, blogMiddleware, blogController.updateBlog);
+router.delete('/:blogId', authentication, blogMiddleware, blogController.deleteBlog);
 
 module.exports = router;

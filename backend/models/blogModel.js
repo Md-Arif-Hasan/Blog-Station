@@ -14,39 +14,32 @@ const Blog = sequelize.define('blogs', {
         },
     },
 
-    title: {
-        type: DataTypes.STRING,
-        noUpdate: true,
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'Please enter a title. ',
-            },
-        },
+  title: {
+    type: DataTypes.STRING,
+    noUpdate: true,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: "Please enter a title. ",
+      },
     },
-    description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notNull: {
-                msg: 'Please enter a valid blog descriptiom . ',
-            },
-        },
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: "Please enter a valid blog descriptiom . ",
+      },
     },
+  },
 
-    authorid: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        noUpdate: true,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        },
-    },
 });
 
 User.hasMany(Blog, {
     foreignKey: 'authorid',
+    onDelete: 'cascade',
+    hooks: true,
 });
 
 Blog.belongsTo(User, {

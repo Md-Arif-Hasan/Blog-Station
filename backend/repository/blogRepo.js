@@ -1,6 +1,8 @@
-/* eslint-disable prettier/prettier */
 const Blog = require('../models/blogModel');
 const { paginate } = require('../utils/pagination');
+
+// eslint-disable-next-line no-unused-expressions
+('use strict');
 
 exports.getAllBlogs = async (req) => {
     try {
@@ -11,13 +13,24 @@ exports.getAllBlogs = async (req) => {
         console.log(err.stack);
         throw err;
     }
+('use strict');
+
+exports.getAllBlogs = async () => {
+  try {
+    const {offset, limit} = paginate(req);
+    const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
+    return allBlogs;
+  } catch (err) {
+    console.log(err.stack);
+    throw err;
+  }
 };
 
-exports.getBlogById = async (blogid) => {
+exports.getBlogById = async (blogId) => {
     try {
         const fetchedBlog = await Blog.findOne({
             where: {
-                id: blogid,
+                id: blogId,
             },
         });
         return fetchedBlog;
@@ -37,24 +50,28 @@ exports.createBlog = async (blog) => {
     }
 };
 
-exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
-    try {
-        const result = await Blog.update(
-            { title: updatedTitle, description: updatedDescription },
-            { where: { id: blogid } },
-        );
-        return result;
-    } catch (err) {
-        console.log(err.stack);
-        throw err;
-    }
+
+
+exports.updateBlog = async (blogId, title, description) => {
+  try {
+    const result = await Blog.update(
+      { title,
+        description
+      },
+      { where: { id: blogId } }
+    );
+    return result;
+  } catch (err) {
+    console.log(err.stack);
+    throw err;
+  }
 };
 
-exports.deleteBlog = async (blogid) => {
+exports.deleteBlog = async (blogId) => {
     try {
         const blog = await Blog.destroy({
             where: {
-                id: blogid,
+                id: blogId,
             },
         });
         return blog;

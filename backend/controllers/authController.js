@@ -4,6 +4,8 @@ const JWTToken = require('../utils/JWTToken');
 
 dotenv.config();
 
+('use strict');
+
 exports.register = async (req, res) => {
     try {
         if (!req.body) {
@@ -43,4 +45,18 @@ exports.login = async (req, res) => {
     } catch (err) {
         res.status(400).send('Error!');
     }
+    const usedDTO = false;
+    const loggedInUser = await authService.login(req.body,usedDTO);
+
+    if (loggedInUser) {
+      const accessToken = JWTToken.createJwtToken(loggedInUser, res);
+
+      res.cookie("jwt", accessToken, { httpOnly: true });
+      res.send(loggedInUser);
+    } else {
+      res.status(400).send("Incorrect username or password");
+    }
+  } catch (err) {
+    res.status(400).send("Error!");
+  }
 };
