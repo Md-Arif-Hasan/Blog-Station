@@ -39,11 +39,11 @@ exports.createBlog = async (blog) => {
 
 
 
-exports.updateBlog = async (blogId, updatedTitle, updatedDescription) => {
+exports.updateBlog = async (blogId, title, description) => {
   try {
     const result = await Blog.update(
-      { title: updatedTitle,
-        description: updatedDescription
+      { title,
+        description
       },
       { where: { id: blogId } }
     );

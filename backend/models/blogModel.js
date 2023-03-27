@@ -34,19 +34,12 @@ const Blog = sequelize.define("blogs", {
     },
   },
 
-  authorid: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    noUpdate: true,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-  },
 });
 
 User.hasMany(Blog, {
   foreignKey: "authorid",
+  onDelete: 'cascade',
+  hooks: true,
 });
 
 Blog.belongsTo(User, {
@@ -55,7 +48,7 @@ Blog.belongsTo(User, {
 
 const test = async () => {
   console.log("The table 2 for the User model was just (re)created!");
-  await sequelize.sync({ force: false });
+  await sequelize.sync({ force: true });
   console.log("All models 2 were synchronized successfully.");
 };
 test();
