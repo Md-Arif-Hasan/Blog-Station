@@ -51,15 +51,15 @@ exports.updateBlog = async (blogId, blog) => {
       return { status: 400, message: "Invalid parameter!" };
     }
 
-    title = blog.title;
-    description = blog.description; 
+   const title = blog.title;
+   const description = blog.description; 
 
     if(!title|| !description){
       return { status: 400, message: "Invalid request!" };
     }
     const result = await blogRepo.updateBlog(blogId, title, description);
 
-    if (result === 0) {
+    if (!result) {
       return { status: 404, message: "Blog not found!" };
     }
     return { status: 200, message: "Blog updated successfully" };
@@ -73,7 +73,7 @@ exports.updateBlog = async (blogId, blog) => {
 exports.deleteBlog = async (blogId) => {
   try {
     const result = await blogRepo.deleteBlog(blogId);
-    if (result === 1)
+    if (result)
       return { status: 200, message: "Blog deleted successfully" };
     else return { status: 404, message: "Blog not found" };
   } catch (error) {
