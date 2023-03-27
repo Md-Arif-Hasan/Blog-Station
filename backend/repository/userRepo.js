@@ -2,9 +2,10 @@ const UserDTO = require('../DTO/userDTO');
 const User = require('../models/userModel');
 const { paginate } = require('../utils/pagination');
 
+// eslint-disable-next-line no-unused-expressions
 ('use strict');
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (req) => {
     try {
         const { offset, limit } = paginate(req);
         const data = await User.findAll({ offset, limit, order: [['createdAt', 'ASC']] });

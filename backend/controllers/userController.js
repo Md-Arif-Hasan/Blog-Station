@@ -1,6 +1,7 @@
 const userService = require('../service/userService');
 const { sendResponse } = require('../utils/contentNegotiation');
 
+// eslint-disable-next-line no-unused-expressions
 ('use strict');
 
 exports.getAllUsers = async (req, res) => {
@@ -9,8 +10,8 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUserByUsername = async (req, res) => {
-  const data = await userService.getUserByUsername(req.params.username);
-  return sendResponse(req,res,data.status, data.message);
+    const data = await userService.getUserByUsername(req.params.username);
+    return sendResponse(req, res, data.status, data.message);
 };
 
 exports.createUser = async (req, res) => {

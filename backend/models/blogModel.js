@@ -14,26 +14,25 @@ const Blog = sequelize.define('blogs', {
         },
     },
 
-  title: {
-    type: DataTypes.STRING,
-    noUpdate: true,
-    allowNull: false,
-    validate: {
-      notNull: {
-        msg: "Please enter a title. ",
-      },
+    title: {
+        type: DataTypes.STRING,
+        noUpdate: true,
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please enter a title. ',
+            },
+        },
     },
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notNull: {
-        msg: "Please enter a valid blog descriptiom . ",
-      },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Please enter a valid blog description. ',
+            },
+        },
     },
-  },
-
 });
 
 User.hasMany(Blog, {

@@ -13,17 +13,6 @@ exports.getAllBlogs = async (req) => {
         console.log(err.stack);
         throw err;
     }
-('use strict');
-
-exports.getAllBlogs = async () => {
-  try {
-    const {offset, limit} = paginate(req);
-    const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
-    return allBlogs;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
 };
 
 exports.getBlogById = async (blogId) => {
@@ -50,21 +39,14 @@ exports.createBlog = async (blog) => {
     }
 };
 
-
-
 exports.updateBlog = async (blogId, title, description) => {
-  try {
-    const result = await Blog.update(
-      { title,
-        description
-      },
-      { where: { id: blogId } }
-    );
-    return result;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+    try {
+        const result = await Blog.update({ title, description }, { where: { id: blogId } });
+        return result;
+    } catch (err) {
+        console.log(err.stack);
+        throw err;
+    }
 };
 
 exports.deleteBlog = async (blogId) => {

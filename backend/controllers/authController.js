@@ -4,6 +4,7 @@ const JWTToken = require('../utils/JWTToken');
 
 dotenv.config();
 
+// eslint-disable-next-line no-unused-expressions
 ('use strict');
 
 exports.register = async (req, res) => {
@@ -13,7 +14,7 @@ exports.register = async (req, res) => {
         }
         const registeredUser = await authService.register(req.body);
         if (registeredUser) {
-            const accessToken = JWTToken.createJwtToken(registeredUser);
+            const accessToken = JWTToken.createJwtToken(registeredUser, res);
 
             res.cookie('jwt', accessToken, { httpOnly: true });
             res.send(registeredUser);
@@ -30,12 +31,11 @@ exports.login = async (req, res) => {
         if (!req.body) {
             res.status(400).send('Bad request');
         }
-
         const usedDTO = false;
         const loggedInUser = await authService.login(req.body, usedDTO);
 
         if (loggedInUser) {
-            const accessToken = JWTToken.createJwtToken(loggedInUser);
+            const accessToken = JWTToken.createJwtToken(loggedInUser, res);
 
             res.cookie('jwt', accessToken, { httpOnly: true });
             res.send(loggedInUser);
@@ -45,18 +45,4 @@ exports.login = async (req, res) => {
     } catch (err) {
         res.status(400).send('Error!');
     }
-    const usedDTO = false;
-    const loggedInUser = await authService.login(req.body,usedDTO);
-
-    if (loggedInUser) {
-      const accessToken = JWTToken.createJwtToken(loggedInUser, res);
-
-      res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(loggedInUser);
-    } else {
-      res.status(400).send("Incorrect username or password");
-    }
-  } catch (err) {
-    res.status(400).send("Error!");
-  }
 };

@@ -1,16 +1,17 @@
 const blogService = require('../service/blogService');
 const { sendResponse } = require('../utils/contentNegotiation');
 
+// eslint-disable-next-line no-unused-expressions
 ('use strict');
 
 exports.getAllBlogs = async (req, res) => {
-  const data = await blogService.getAllBlogs();
-  return sendResponse(req,res,data.status, data.message);
+    const data = await blogService.getAllBlogs(req);
+    return sendResponse(req, res, data.status, data.message);
 };
 
 exports.getBlogById = async (req, res) => {
-  const data = await blogService.getBlogById(req.params.blogId);
-  return sendResponse(req,res,data.status, data.message);
+    const data = await blogService.getBlogById(req.params.blogId);
+    return sendResponse(req, res, data.status, data.message);
 };
 
 exports.createBlog = async (req, res) => {
@@ -19,13 +20,13 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.updateBlog = async (req, res) => {
-  const blogId = req.params.blogId;
-  const data = await blogService.updateBlog(blogId, req.body);
-  res.status(data.status).send(data.message);
+    const { blogId } = req.params;
+    const data = await blogService.updateBlog(blogId, req.body);
+    res.status(data.status).send(data.message);
 };
 
-exports.deleteBlog= async (req, res) => {
-  const blogId = req.params.blogId;
-  const data = await blogService.deleteBlog(blogId);
-  res.status(data.status).send(data.message);
+exports.deleteBlog = async (req, res) => {
+    const { blogId } = req.params;
+    const data = await blogService.deleteBlog(blogId);
+    res.status(data.status).send(data.message);
 };
