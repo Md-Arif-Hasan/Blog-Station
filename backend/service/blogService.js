@@ -1,25 +1,27 @@
 const blogRepo = require("../repository/blogRepo");
-const blogCheck = require("../utils/blogValidation");
+const {blogValidation} = require("../utils/blogValidation");
 const blogDTO = require("../DTO/blogDTO");
 
-exports.getallBlogs = async () => {
+('use strict');
+
+exports.getAllBlogs = async () => {
   try {
     const fetchedBlogs = await blogRepo.getAllBlogs();
-    if (fetchedBlogs.length === 0) {
+    if (!fetchedBlogs.length) {
       return { status: 404, message: "No blog in users table!" };
     }
     return { status: 200, message: fetchedBlogs };
   } catch (error) {
-    return { status: 404, message: `${error.errors[0].message}` };
+    return { status: 404, message: `It's a ${error.name}` };
   }
 };
 
-exports.getBlogById = async (blogid) => {
+exports.getBlogById = async (blogId) => {
   try {
-    const fetchedBlog = await blogRepo.getBlogById(blogid);
-    
-    if (fetchedBlog.length === 0) {
-      return { status: 404, message: "Thid Blog doesn't exist in database!" };
+    const fetchedBlog = await blogRepo.getBlogById(blogId);
+
+    if (!fetchedBlog) {
+      return { status: 404, message: "Thi Blog doesn't exist in database!" };
     }
     return { status: 200, message: new blogDTO(fetchedBlog) };
   } catch (error) {
@@ -29,7 +31,7 @@ exports.getBlogById = async (blogid) => {
 
 
 exports.createBlog = async (blog) => {
-  const blogInfoChecker = blogCheck.blogValidation(blog.title, blog.description);
+  const blogInfoChecker = blogValidation(blog.title, blog.description);
   if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
   
   try {
@@ -43,9 +45,9 @@ exports.createBlog = async (blog) => {
   }
 };
 
-exports.updateBlog = async (blogid, blog) => {
+exports.updateBlog = async (blogId, blog) => {
   try {
-    if(!blogid){
+    if(!blogId){
       return { status: 400, message: "Invalid parameter!" };
     }
 
@@ -55,7 +57,7 @@ exports.updateBlog = async (blogid, blog) => {
     if(!title|| !description){
       return { status: 400, message: "Invalid request!" };
     }
-    const result = await blogRepo.updateBlog(blogid, title, description);
+    const result = await blogRepo.updateBlog(blogId, title, description);
 
     if (result === 0) {
       return { status: 404, message: "Blog not found!" };
@@ -68,9 +70,9 @@ exports.updateBlog = async (blogid, blog) => {
 
 
 
-exports.deleteBlog = async (blogid) => {
+exports.deleteBlog = async (blogId) => {
   try {
-    const result = await blogRepo.deleteBlog(blogid);
+    const result = await blogRepo.deleteBlog(blogId);
     if (result === 1)
       return { status: 200, message: "Blog deleted successfully" };
     else return { status: 404, message: "Blog not found" };

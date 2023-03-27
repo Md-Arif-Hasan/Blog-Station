@@ -1,5 +1,7 @@
 const Blog = require("../models/blogModel");
 
+('use strict');
+
 exports.getAllBlogs = async () => {
   try {
     const allBlogs = await Blog.findAll();
@@ -10,11 +12,11 @@ exports.getAllBlogs = async () => {
   }
 };
 
-exports.getBlogById = async (blogid) => {
+exports.getBlogById = async (blogId) => {
   try {
     const fetchedBlog = await Blog.findOne({
       where: {
-        id: blogid,
+        id: blogId,
       },
     });
     return fetchedBlog;
@@ -37,13 +39,13 @@ exports.createBlog = async (blog) => {
 
 
 
-exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
+exports.updateBlog = async (blogId, updatedTitle, updatedDescription) => {
   try {
     const result = await Blog.update(
       { title: updatedTitle,
         description: updatedDescription
       },
-      { where: { id: blogid } }
+      { where: { id: blogId } }
     );
     return result;
   } catch (err) {
@@ -52,11 +54,11 @@ exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
   }
 };
 
-exports.deleteBlog = async (blogid) => {
+exports.deleteBlog = async (blogId) => {
   try {
     const blog = await Blog.destroy({
       where: {
-        id: blogid,
+        id: blogId,
       },
     });
     return blog;

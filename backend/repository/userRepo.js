@@ -1,7 +1,9 @@
 const UserDTO = require("../DTO/userDTO");
 const User = require("../models/userModel");
 
-exports.getAllUsers = async (req) => {
+('use strict');
+
+exports.getAllUsers = async () => {
   try {
     const data = await User.findAll();
     const allUsers = [];

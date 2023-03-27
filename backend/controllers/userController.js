@@ -1,5 +1,7 @@
 const userService = require("../service/userService");
 
+('use strict');
+
 exports.getAllUsers = async (req, res) => {
   const data = await userService.getAllUsers();
   res.status(data.status).send(data.message);
