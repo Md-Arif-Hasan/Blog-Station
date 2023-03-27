@@ -2,6 +2,8 @@ const password = require("../utils/hashingPassword");
 const userInfo = require("../utils/userInfoValidation");
 const userService = require("../service/userService");
 
+('use strict');
+
 exports.register = async (user) => {
   try {
     const result = await userService.createUser(user);
@@ -16,10 +18,8 @@ exports.register = async (user) => {
 
 exports.login = async (user, usedDTO) => {
   try {
-    const infoValid = userInfo.userInfoValidation(user.username, user.password);
-
+    const infoValid = userInfo.userInfoValidation(user);
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
-
     const username = user.username.toLowerCase();
 
     const checkedUser = await userService.getUserByUsername(username, usedDTO);
@@ -33,7 +33,7 @@ exports.login = async (user, usedDTO) => {
   } catch (error) {
     return {
       status: 401,
-      message: `${error.errors[0].message} It's a ${error.name}`,
+      message: `It's a  ${error.name}`,
     };
   }
 };

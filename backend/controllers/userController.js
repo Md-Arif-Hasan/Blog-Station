@@ -1,12 +1,14 @@
 const userService = require("../service/userService");
 const {sendResponse} = require("../utils/contentNegotiation");
 
+('use strict');
+
 exports.getAllUsers = async (req, res) => {
   const data = await userService.getAllUsers();
   return sendResponse(req,res,data.status, data.message);
 };
 
-exports.getUserByUserName = async (req, res) => {
+exports.getUserByUsername = async (req, res) => {
   const data = await userService.getUserByUsername(req.params.username);
   return sendResponse(req,res,data.status, data.message);
 };
