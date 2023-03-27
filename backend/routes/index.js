@@ -1,9 +1,10 @@
 const authRouter = require("./authRouter");
-const middleware = require("../middleware/authMiddleware");
+const blogRoute = require("./blogRouter");
 const userRouter = require("./userRoutes");
 const router = require("express").Router();
 
-router.use("/users", middleware, userRouter);
+router.use("/users" , userRouter);
 router.use("/auth", authRouter);
+router.use("/blog", blogRoute);
 
 module.exports = router;

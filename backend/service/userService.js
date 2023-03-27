@@ -4,38 +4,40 @@ const userInfo = require("../utils/userInfoValidation");
 const password = require("../utils/hashingPassword");
 const userDTO = require("../DTO/userDTO");
 
-exports.getAllUsers = async () => {
+('use strict');
+
+exports.getAllUsers = async (req) => {
   try {
-    const fetchedUsers = await userRepo.getAllUsers();
-    if (fetchedUsers.length == 0) {
+    const fetchedUsers = await userRepo.getAllUsers(req);
+    if (!fetchedUsers.length) {
       return { status: 404, message: "No data in users table!" };
     }
     return { status: 200, message: fetchedUsers };
   } catch (error) {
-    return { status: 404, message: `${error.errors[0].message}` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };
 
-exports.getUserByUserName = async (username, usedDTO) => {
+
+exports.getUserByUsername = async (username, usedDTO) => {
   try {
-    const data = await userRepo.getUserByUserName(username);
-    if (!data.length ) {
+    const fetchedUser = await userRepo.getUserByUsername(username);
+    if (!fetchedUser) {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
     if(!usedDTO){
-      return { status: 200, message: data };
+      return { status: 200, message: fetchedUser };
     } else{
-
-      return { status: 200, message: new userDTO(data) };
+      return { status: 200, message: new userDTO(fetchedUser) };
     }
   } catch (error) {
-    return { status: 404, message: `${error.errors[0].message}` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };
 
 exports.createUser = async (body) => {
 
-  const infoValid = userInfo.userInfoValidation(body.username, body.password);
+  const infoValid = userInfo.userInfoValidation(body);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
   const myUuid = crypto.randomUUID();
@@ -47,8 +49,8 @@ exports.createUser = async (body) => {
     return { status: 200, message: "User created successfully" };
   } catch (error) {
     return {
-      status: 401,
-      message: `${error.errors[0].message} It's a ${error.name}`,
+      status: 500,
+      message: `It's a ${error.name}`,
     };
   }
 };
@@ -57,22 +59,22 @@ exports.updateUser = async (username, body) => {
   try {
     const hashedPassword = await password.hashingPassword(body.password);
     const data = await userRepo.updateUser(username, hashedPassword);
-    if (data == 0) {
+    if (data === 0) {
       return { status: 404, message: "User not found!" };
     }
     return { status: 200, message: "User updated successfully" };
   } catch (error) {
-   return { status: 401, message: `${error.errors[0].message}` };
+   return { status: 500, message: `It's a ${error.name}`};
   }
 };
 
 exports.deleteUser = async (username) => {
   try {
     const result = await userRepo.deleteUser(username.toLowerCase());
-    if (result == 1)
+    if (result === 1)
       return { status: 200, message: "User deleted successfully" };
     else return { status: 404, message: "User not found" };
   } catch (error) {
-    return { status: 404, message: `${error.errors[0].message}` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };
