@@ -5,12 +5,12 @@ const {sendResponse} = require("../utils/contentNegotiation");
 
 exports.getAllBlogs = async (req, res) => {
   const data = await blogService.getAllBlogs();
-  res.status(data.status).send(data.message);
+  return sendResponse(req,res,data.status, data.message);
 };
 
 exports.getBlogById = async (req, res) => {
   const data = await blogService.getBlogById(req.params.blogId);
-  res.status(data.status).send(data.message);
+  return sendResponse(req,res,data.status, data.message);
 };
 
 exports.createBlog = async (req, res) => {

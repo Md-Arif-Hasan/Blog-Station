@@ -55,7 +55,7 @@ const User = sequelize.define("users", {
 
 const test = async () => {
   console.log("The table for the User model was just (re)created!");
-  await sequelize.sync({ force: true });
+  await sequelize.sync({ force: false });
   console.log("All models were synchronized successfully.");
 };
 test();
