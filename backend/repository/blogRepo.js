@@ -1,7 +1,9 @@
 const Blog = require("../models/blogModel");
 const {paginate} = require("../utils/pagination");
 
-exports.getAllBlogs = async (req) => {
+('use strict');
+
+exports.getAllBlogs = async () => {
   try {
     const {offset, limit} = paginate(req);
     const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
@@ -12,11 +14,11 @@ exports.getAllBlogs = async (req) => {
   }
 };
 
-exports.getBlogById = async (blogid) => {
+exports.getBlogById = async (blogId) => {
   try {
     const fetchedBlog = await Blog.findOne({
       where: {
-        id: blogid,
+        id: blogId,
       },
     });
     return fetchedBlog;
@@ -39,13 +41,13 @@ exports.createBlog = async (blog) => {
 
 
 
-exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
+exports.updateBlog = async (blogId, title, description) => {
   try {
     const result = await Blog.update(
-      { title: updatedTitle,
-        description: updatedDescription
+      { title,
+        description
       },
-      { where: { id: blogid } }
+      { where: { id: blogId } }
     );
     return result;
   } catch (err) {
@@ -54,11 +56,11 @@ exports.updateBlog = async (blogid, updatedTitle, updatedDescription) => {
   }
 };
 
-exports.deleteBlog = async (blogid) => {
+exports.deleteBlog = async (blogId) => {
   try {
     const blog = await Blog.destroy({
       where: {
-        id: blogid,
+        id: blogId,
       },
     });
     return blog;

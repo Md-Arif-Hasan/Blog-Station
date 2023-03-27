@@ -4,10 +4,12 @@ const userInfo = require("../utils/userInfoValidation");
 const password = require("../utils/hashingPassword");
 const userDTO = require("../DTO/userDTO");
 
+('use strict');
+
 exports.getAllUsers = async (req) => {
   try {
     const fetchedUsers = await userRepo.getAllUsers(req);
-    if (fetchedUsers.length == 0) {
+    if (!fetchedUsers.length) {
       return { status: 404, message: "No data in users table!" };
     }
     return { status: 200, message: fetchedUsers };
@@ -20,13 +22,11 @@ exports.getAllUsers = async (req) => {
 exports.getUserByUsername = async (username, usedDTO) => {
   try {
     const fetchedUser = await userRepo.getUserByUsername(username);
-    if (fetchedUser.length == 0) {
+    if (!fetchedUser) {
       return { status: 404, message: "Username doesn't exist in database!" };
     }
     if(!usedDTO){
       return { status: 200, message: fetchedUser };
-
-
     } else{
       return { status: 200, message: new userDTO(fetchedUser) };
     }
@@ -59,7 +59,7 @@ exports.updateUser = async (username, body) => {
   try {
     const hashedPassword = await password.hashingPassword(body.password);
     const data = await userRepo.updateUser(username, hashedPassword);
-    if (data == 0) {
+    if (data === 0) {
       return { status: 404, message: "User not found!" };
     }
     return { status: 200, message: "User updated successfully" };
@@ -71,7 +71,7 @@ exports.updateUser = async (username, body) => {
 exports.deleteUser = async (username) => {
   try {
     const result = await userRepo.deleteUser(username.toLowerCase());
-    if (result == 1)
+    if (result === 1)
       return { status: 200, message: "User deleted successfully" };
     else return { status: 404, message: "User not found" };
   } catch (error) {
