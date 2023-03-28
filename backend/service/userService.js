@@ -59,7 +59,7 @@ exports.updateUser = async (username, body) => {
   try {
     const hashedPassword = await password.hashingPassword(body.password);
     const data = await userRepo.updateUser(username, hashedPassword);
-    if (data === 0) {
+    if (!data) {
       return { status: 404, message: "User not found!" };
     }
     return { status: 200, message: "User updated successfully" };
@@ -71,7 +71,7 @@ exports.updateUser = async (username, body) => {
 exports.deleteUser = async (username) => {
   try {
     const result = await userRepo.deleteUser(username.toLowerCase());
-    if (result === 1)
+    if (result)
       return { status: 200, message: "User deleted successfully" };
     else return { status: 404, message: "User not found" };
   } catch (error) {
