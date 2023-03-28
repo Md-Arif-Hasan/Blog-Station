@@ -6,5 +6,5 @@ class BlogDTO {
         this.updatedAt = blog.updatedAt;
         this.authorid = blog.authorid;
     }
-  }
-  module.exports = BlogDTO;
+}
+module.exports = BlogDTO;
