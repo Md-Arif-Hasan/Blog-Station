@@ -29,7 +29,7 @@ const Blog = sequelize.define("blogs", {
     allowNull: false,
     validate: {
       notNull: {
-        msg: "Please enter a valid blog description . ",
+        msg: "Please enter a valid blog description. ",
       },
     },
   },

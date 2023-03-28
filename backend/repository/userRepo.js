@@ -4,7 +4,7 @@ const { paginate } = require("../utils/pagination");
 
 ('use strict');
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (req) => {
   try {
     const {offset, limit} = paginate(req);
     const data = await User.findAll({ offset,limit, order: [['createdAt','ASC']] });

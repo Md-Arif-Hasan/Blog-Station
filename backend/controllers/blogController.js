@@ -4,28 +4,28 @@ const {sendResponse} = require("../utils/contentNegotiation");
 ('use strict');
 
 exports.getAllBlogs = async (req, res) => {
-  const data = await blogService.getAllBlogs(req);
-  return sendResponse(req,res,data.status, data.message);
+  const allBlogs = await blogService.getAllBlogs(req);
+  return sendResponse(req,res,allBlogs.status, allBlogs.message);
 };
 
 exports.getBlogById = async (req, res) => {
-  const data = await blogService.getBlogById(req.params.blogId);
-  return sendResponse(req,res,data.status, data.message);
+  const oneBlog = await blogService.getBlogById(req.params.blogId);
+  return sendResponse(req,res,oneBlog.status, oneBlog.message);
 };
 
 exports.createBlog = async (req, res) => {
-  const data = await blogService.createBlog(req.body);
-  return sendResponse(req,res,data.status, data.message);
+  const createdBlog = await blogService.createBlog(req.body);
+  return sendResponse(req,res,createdBlog.status, createdBlog.message);
 };
 
 exports.updateBlog = async (req, res) => {
   const blogId = req.params.blogId;
-  const data = await blogService.updateBlog(blogId, req.body);
-  res.status(data.status).send(data.message);
+  const updatedBlog = await blogService.updateBlog(blogId, req.body);
+  res.status(updatedBlog.status).send(updatedBlog.message);
 };
 
 exports.deleteBlog= async (req, res) => {
   const blogId = req.params.blogId;
-  const data = await blogService.deleteBlog(blogId);
-  res.status(data.status).send(data.message);
+  const deletedBlog = await blogService.deleteBlog(blogId);
+  res.status(deletedBlog.status).send(deletedBlog.message);
 };

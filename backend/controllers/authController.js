@@ -3,44 +3,37 @@ const JWTToken = require("../utils/JWTToken");
 const dotenv = require("dotenv");
 dotenv.config();
 
-('use strict');
+("use strict");
 
 exports.register = async (req, res) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
+    if (!req.body) return res.status(400).send("Bad request");
+    
     const registeredUser = await authService.register(req.body);
     if (registeredUser) {
       const accessToken = JWTToken.createJwtToken(registeredUser, res);
-
       res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(registeredUser);
-    } else {
-      res.status(400).send("Please try to register again");
+      return res.send(registeredUser);
     }
+    return res.status(400).send("Please try to register again");
   } catch (err) {
-    res.status(400).send("Error!");
+    return res.status(409).send("Unhandled error!");
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
-    const usedDTO = false;
-    const loggedInUser = await authService.login(req.body,usedDTO);
+    if (!req.body) return res.status(400).send("Bad request");
+
+    const loggedInUser = await authService.login(req.body);
 
     if (loggedInUser) {
       const accessToken = JWTToken.createJwtToken(loggedInUser, res);
-
       res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(loggedInUser);
-    } else {
-      res.status(400).send("Incorrect username or password");
+      return res.send(loggedInUser);
     }
+    return res.status(400).send("Incorrect username or password");
   } catch (err) {
-    res.status(400).send("Error!");
+   return res.status(409).send("Unhandled error!");
   }
 };

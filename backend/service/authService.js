@@ -6,23 +6,23 @@ const userService = require("../service/userService");
 
 exports.register = async (user) => {
   try {
-    const result = await userService.createUser(user);
-    return result;
+    const createdUser = await userService.createUser(user);
+    return createdUser;
   } catch (error) {
     return {
       status: 400,
-      message: ` It's a ${error.name}`,
+      message: `${error.errors[0].message}`,
     };
   }
 };
 
-exports.login = async (user, usedDTO) => {
+exports.login = async (user) => {
   try {
     const infoValid = userInfo.userInfoValidation(user);
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUsername(username, usedDTO);
+    const checkedUser = await userService.getUserByUsernameWithoutDTO(username);
     if (checkedUser.message) {
       const isPasswordMatched = await password.checkPassword(user.password,checkedUser.message.password);
       if (!isPasswordMatched) {
@@ -33,7 +33,7 @@ exports.login = async (user, usedDTO) => {
   } catch (error) {
     return {
       status: 401,
-      message: `It's a  ${error.name}`,
+      message:  `${error.errors[0].message}`,
     };
   }
 };

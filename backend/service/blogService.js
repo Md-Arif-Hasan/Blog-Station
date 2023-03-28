@@ -14,7 +14,7 @@ exports.getAllBlogs = async (req) => {
     }
     return { status: 200, message: fetchedBlogs };
   } catch (error) {
-    return { status: 404, message: `It's a ${error.name}` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };
 
@@ -27,7 +27,7 @@ exports.getBlogById = async (blogId) => {
     }
     return { status: 200, message: new blogDTO(fetchedBlog) };
   } catch (error) {
-    return { status: 404, message: `No Blog found` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };
 
@@ -37,12 +37,12 @@ exports.createBlog = async (blog) => {
   if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
   
   try {
-    await blogRepo.createBlog(blog);
-    return { status: 200, message: "Blog created successfully" };
+    const createdBlog = await blogRepo.createBlog(blog);
+    return { status: 200, message: createdBlog };
   } catch (error) {
     return {
       status: 500,
-      message: `Service problem` 
+      message:  `${error.errors[0].message}`
     };
   }
 };
@@ -59,14 +59,14 @@ exports.updateBlog = async (blogId, blog) => {
     if(!title|| !description){
       return { status: 400, message: "Invalid request!" };
     }
-    const result = await blogRepo.updateBlog(blogId, title, description);
+    const updatedBlog = await blogRepo.updateBlog(blogId, title, description);
 
-    if (!result) {
+    if (!updatedBlog) {
       return { status: 404, message: "Blog not found!" };
     }
     return { status: 200, message: "Blog updated successfully" };
   } catch (error) {
-   return { status: 409, message: `Unhandles Error!` };
+   return { status: 500, message: `It's a ${error.name}`};
   }
 };
 
@@ -74,11 +74,11 @@ exports.updateBlog = async (blogId, blog) => {
 
 exports.deleteBlog = async (blogId) => {
   try {
-    const result = await blogRepo.deleteBlog(blogId);
-    if (result)
+    const deletedBlog = await blogRepo.deleteBlog(blogId);
+    if (deletedBlog)
       return { status: 200, message: "Blog deleted successfully" };
     else return { status: 404, message: "Blog not found" };
   } catch (error) {
-    return { status: 409, message: `Unhandled error` };
+    return { status: 500, message: `It's a ${error.name}` };
   }
 };

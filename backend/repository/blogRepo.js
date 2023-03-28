@@ -37,8 +37,6 @@ exports.createBlog = async (blog) => {
   }
 };
 
-
-
 exports.updateBlog = async (blogId, title, description) => {
   try {
     const result = await Blog.update(

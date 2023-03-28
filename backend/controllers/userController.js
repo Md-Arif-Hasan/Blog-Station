@@ -4,28 +4,28 @@ const {sendResponse} = require("../utils/contentNegotiation");
 ('use strict');
 
 exports.getAllUsers = async (req, res) => {
-  const data = await userService.getAllUsers(req);
-  return sendResponse(req,res,data.status, data.message);
+  const allUsers = await userService.getAllUsers(req);
+  return sendResponse(req,res,allUsers.status, allUsers.message);
 };
 
 exports.getUserByUsername = async (req, res) => {
-  const data = await userService.getUserByUsername(req.params.username);
-  return sendResponse(req,res,data.status, data.message);
+  const oneUser = await userService.getUserByUsernameWithDTO(req.params.username);
+  return sendResponse(req,res,oneUser.status, oneUser.message);
 };
 
 exports.createUser = async (req, res) => {
-  const data = await userService.createUser(req.body);
-  res.status(data.status).send(data.message);
+  const createdUser = await userService.createUser(req.body);
+  return sendResponse(req,res,createdUser.status, createdUser.message);
 };
 
 exports.updateUser = async (req, res) => {
   const username = req.params.username.toLowerCase();
-  const data = await userService.updateUser(username, req.body);
-  res.status(data.status).send(data.message);
+  const updatedUser = await userService.updateUser(username, req.body);
+  res.status(updatedUser.status).send(updatedUser.message);
 };
 
 exports.deleteUser = async (req, res) => {
   const username = req.params.username.toLowerCase();
-  const data = await userService.deleteUser(username);
-  res.status(data.status).send(data.message);
+  const deletedUser = await userService.deleteUser(username);
+  res.status(deletedUser.status).send(deletedUser.message);
 };
