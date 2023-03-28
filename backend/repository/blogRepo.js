@@ -3,7 +3,7 @@ const {paginate} = require("../utils/pagination");
 
 ('use strict');
 
-exports.getAllBlogs = async () => {
+exports.getAllBlogs = async (req) => {
   try {
     const {offset, limit} = paginate(req);
     const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
