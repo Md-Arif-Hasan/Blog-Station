@@ -8,8 +8,8 @@ exports.sendXmlResponse = (res, statusCode, data) => res.status(statusCode).send
 
 exports.sendHtmlResponse = ( res, statusCode, data) => res.status(statusCode).send(js2Html(data));
 
-exports.sendTextResponse = ( res, statusCode, data) =>
-    res.status(statusCode).send(js2Txt.toPlainText(data));
+exports.sendTextResponse = ( res, statusCode, data) => {
+    res.status(statusCode).send(js2Txt.toPlainText(data)); }
 
 exports.sendResponse = (req, res, statusCode, data) => {
     if (req.headers.accept === 'application/xml') {
@@ -20,7 +20,7 @@ exports.sendResponse = (req, res, statusCode, data) => {
         return this.sendHtmlResponse( res, statusCode, data);
     }
 
-    if (req.headers.accept === 'text/plain') {
+    if (req.headers.accept == 'text/plain') {
         return this.sendTextResponse(res, statusCode, data);
     }
     return this.sendJsResponse(res, statusCode, data);

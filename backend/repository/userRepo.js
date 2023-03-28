@@ -1,11 +1,13 @@
 const UserDTO = require("../DTO/userDTO");
 const User = require("../models/userModel");
+const { paginate } = require("../utils/pagination");
 
 ('use strict');
 
 exports.getAllUsers = async () => {
   try {
-    const data = await User.findAll();
+    const {offset, limit} = paginate(req);
+    const data = await User.findAll({ offset,limit, order: [['createdAt','ASC']] });
     const allUsers = [];
     data.forEach((element) => {
       allUsers.push(new UserDTO(element));

@@ -4,7 +4,7 @@ const {sendResponse} = require("../utils/contentNegotiation");
 ('use strict');
 
 exports.getAllUsers = async (req, res) => {
-  const data = await userService.getAllUsers();
+  const data = await userService.getAllUsers(req);
   return sendResponse(req,res,data.status, data.message);
 };
 

@@ -2,9 +2,9 @@ const Blog = require("../models/blogModel");
 
 ('use strict');
 
-exports.getAllBlogs = async () => {
+exports.getAllBlogs = async (offset,limit) => {
   try {
-    const allBlogs = await Blog.findAll();
+    const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
     return allBlogs;
   } catch (err) {
     console.log(err.stack);
