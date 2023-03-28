@@ -1,12 +1,14 @@
 const blogRepo = require("../repository/blogRepo");
 const {blogValidation} = require("../utils/blogValidation");
 const blogDTO = require("../DTO/blogDTO");
+const {paginate} = require("../utils/pagination");
 
 ('use strict');
 
 exports.getAllBlogs = async (req) => {
   try {
-    const fetchedBlogs = await blogRepo.getAllBlogs(req);
+    const {offset, limit} = paginate(req);
+    const fetchedBlogs = await blogRepo.getAllBlogs(offset,limit);
     if (!fetchedBlogs.length) {
       return { status: 404, message: "No blog in users table!" };
     }
