@@ -8,7 +8,7 @@ const userDTO = require("../DTO/userDTO");
 
 exports.getAllUsers = async (req) => {
   try {
-    const fetchedUsers = await userRepo.getAllUsers(req);
+    const fetchedUsers = await userRepo.getAllUsers(req); // whole req should not be sent to req as well as in service, send the necessary data only
     if (!fetchedUsers.length) {
       return { status: 404, message: "No data in users table!" };
     }
@@ -46,10 +46,11 @@ exports.createUser = async (body) => {
   const infoValid = userInfo.userInfoValidation(body);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
-  const myUuid = crypto.randomUUID();
+  // myUuid is not a good name -> useruuid
+  const myUuid = crypto.randomUUID(); // use uuid npm package for generating uuid : https://www.npmjs.com/package/uuid
   const username = body.username.toLowerCase();
   const hashedPassword = await password.hashingPassword(body.password);
-
+  // try catch in service and repo level is redundant!
   try {
     const createdUser = await userRepo.createUser(
       myUuid,

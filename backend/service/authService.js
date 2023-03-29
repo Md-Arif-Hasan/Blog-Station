@@ -16,13 +16,16 @@ exports.register = async (user) => {
   }
 };
 
+
 exports.login = async (user) => {
   try {
+    // fixit all validation can be placed in one single function and call that from here to validate!
     const infoValid = userInfo.userInfoValidation(user);
     if (!infoValid.validity) return { status: 400, message: infoValid.message };
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUsernameWithoutDTO(username);
+    const checkedUser = await userService.getUserByUsernameWithoutDTO(username); // function name could be simpler! getUserByUsername is good enough
+                                                                                // for Dto , function name could be getUserDtoByUsername
     if (checkedUser.message) {
       const isPasswordMatched = await password.checkPassword(user.password,checkedUser.message.password);
       if (!isPasswordMatched) {

@@ -20,6 +20,6 @@ app.use((err, req, res, next) => {
   res.send('500: Internal server error');
 });
 
-app.use("/api/v1/", index);
+app.use("/api/v1/", index); // fixit : index is not a proper naming!
 
 module.exports = app;
