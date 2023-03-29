@@ -53,8 +53,8 @@ exports.updateBlog = async (blogId, blog) => {
    const title = blog.title;
    const description = blog.description; 
 
-    if(!title|| !description){
-      return { status: 400, message: "Invalid request!" };
+    if(!title && !description){
+      return { status: 400, message: "Title & description aren't provided!" };
     }
     const updatedBlog = await blogRepo.updateBlog(blogId, title, description);
 
