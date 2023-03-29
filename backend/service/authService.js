@@ -17,8 +17,10 @@ exports.register = async (user) => {
   }
 };
 
+
 exports.login = async (user) => {
   try {
+    // fixit all validation can be placed in one single function and call that from here to validate!
     const infoValid = userInfo.userInfoValidation(user);
     if (!infoValid.validity)
       throw Object.assign(new Error(infoValid.message), { statusCode: 400 });

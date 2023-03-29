@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
     const loggedInUser = await authService.login(req.body);
 
     if (loggedInUser) {
-      const accessToken = JWTToken.createJwtToken(loggedInUser, res);
+      const accessToken = JWTToken.createJwtToken(loggedInUser);
       res.cookie("jwt", accessToken, { httpOnly: true });
       return res.send(loggedInUser);
     }
