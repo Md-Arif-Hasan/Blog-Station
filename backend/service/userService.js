@@ -14,16 +14,6 @@ exports.getAllUsers = async (offset, limit) => {
     });
   }
   return { status: 200, message: fetchedUsers };
-exports.getAllUsers = async (req) => {
-  try {
-    const fetchedUsers = await userRepo.getAllUsers(req); // whole req should not be sent to req as well as in service, send the necessary data only
-    if (!fetchedUsers.length) {
-      return { status: 404, message: "No data in users table!" };
-    }
-    return { status: 200, message: fetchedUsers };
-  } catch (error) {
-    return { status: 500, message: `It's a ${error.name}` };
-  }
 };
 
 exports.getUserDtoByUsername = async (username) => {
@@ -50,9 +40,9 @@ exports.createUser = async (user) => {
   const infoValid = userInfo.userInfoValidation(user);
   if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
-  const myUuid = crypto.randomUUID();
-  const username = body.username.toLowerCase();
-  const hashedPassword = await password.hashingPassword(body.password);
+  const useruuid = uuidv4();
+  const username = user.username.toLowerCase();
+  const hashedPassword = await password.hashingPassword(user.password);
 
   try {
     const createdUser = await userRepo.createUser(
