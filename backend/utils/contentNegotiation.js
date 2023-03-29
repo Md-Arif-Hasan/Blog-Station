@@ -20,7 +20,7 @@ exports.sendResponse = (req, res, statusCode, data) => {
         return this.sendHtmlResponse( res, statusCode, data);
     }
 
-    if (req.headers.accept == 'text/plain') {
+    if (req.headers.accept === 'text/plain') {
         return this.sendTextResponse(res, statusCode, data);
     }
     return this.sendJsResponse(res, statusCode, data);

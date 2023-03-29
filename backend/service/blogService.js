@@ -38,7 +38,7 @@ exports.createBlog = async (blog) => {
   
   try {
     const createdBlog = await blogRepo.createBlog(blog);
-    return { status: 200, message: createdBlog };
+    return { status: 201, message: createdBlog };
   } catch (error) {
     return {
       status: 500,
@@ -49,10 +49,7 @@ exports.createBlog = async (blog) => {
 
 exports.updateBlog = async (blogId, blog) => {
   try {
-    if(!blogId){
-      return { status: 400, message: "Invalid parameter!" };
-    }
-
+ 
    const title = blog.title;
    const description = blog.description; 
 

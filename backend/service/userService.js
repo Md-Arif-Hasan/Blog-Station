@@ -57,7 +57,7 @@ exports.createUser = async (body) => {
       body.email,
       hashedPassword
     );
-    return { status: 200, message: createdUser };
+    return { status: 201, message: createdUser };
   } catch (error) {
     return {
       status: 500,
