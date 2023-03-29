@@ -20,7 +20,7 @@ const Blog = sequelize.define("blogs", {
     allowNull: false,
     validate: {
       notNull: {
-        msg: "Please enter a title. ",
+        msg: "Please enter a title.",
       },
     },
   },
@@ -29,16 +29,15 @@ const Blog = sequelize.define("blogs", {
     allowNull: false,
     validate: {
       notNull: {
-        msg: "Please enter a valid blog description. ",
+        msg: "Please enter a valid blog description.",
       },
     },
   },
-
 });
 
 User.hasMany(Blog, {
   foreignKey: "authorid",
-  onDelete: 'cascade',
+  onDelete: "cascade",
   hooks: true,
 });
 

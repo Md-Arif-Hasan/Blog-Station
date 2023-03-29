@@ -1,6 +1,6 @@
 
 function blogValidation(title,description) {
-  if (!title )
+  if (!title)
     return { validity: false, message: "Enter a valid title!" };
   if (!description)
     return { validity: false, message: "Enter a valid description" }

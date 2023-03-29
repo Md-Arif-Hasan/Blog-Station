@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const index = require("./routes/index");
+const routing = require("./routes/index");
 const dotenv = require("dotenv");
 dotenv.config();
 app.use(express.json());
@@ -20,6 +20,6 @@ app.use((err, req, res, next) => {
   res.send('500: Internal server error');
 });
 
-app.use("/api/v1/", index);
+app.use("/api/v1/", routing);
 
 module.exports = app;

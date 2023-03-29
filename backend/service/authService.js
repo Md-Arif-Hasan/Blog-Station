@@ -2,38 +2,42 @@ const password = require("../utils/hashingPassword");
 const userInfo = require("../utils/userInfoValidation");
 const userService = require("../service/userService");
 
-('use strict');
+("use strict");
 
 exports.register = async (user) => {
   try {
+    const infoValid = userInfo.userInfoValidation(user);
+    if (!infoValid.validity)
+      throw Object.assign(new Error(infoValid.message), { statusCode: 400 });
+
     const createdUser = await userService.createUser(user);
     return createdUser;
   } catch (error) {
-    return {
-      status: 400,
-      message: `${error.errors[0].message}`,
-    };
+    return { status: error.statusCode, message: error.message };
   }
 };
 
 exports.login = async (user) => {
   try {
     const infoValid = userInfo.userInfoValidation(user);
-    if (!infoValid.validity) return { status: 400, message: infoValid.message };
+    if (!infoValid.validity)
+      throw Object.assign(new Error(infoValid.message), { statusCode: 400 });
     const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUsernameWithoutDTO(username);
+    const checkedUser = await userService.getUserByUsername(username);
     if (checkedUser.message) {
-      const isPasswordMatched = await password.checkPassword(user.password,checkedUser.message.password);
+      const isPasswordMatched = await password.checkPassword(
+        user.password,
+        checkedUser.message.password
+      );
       if (!isPasswordMatched) {
-        return false;
+        throw Object.assign(new Error("Your password isn't correct!"), {
+          statusCode: 401,
+        });
       }
       return checkedUser;
-    } 
+    }
   } catch (error) {
-    return {
-      status: 401,
-      message:  `${error.errors[0].message}`,
-    };
+    return { status: error.statusCode, message: error.message };
   }
 };
