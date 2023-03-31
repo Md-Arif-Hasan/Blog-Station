@@ -8,7 +8,7 @@ const blogMiddleware = async (req, res, next) => {
         const user = await userService.getUserDtoByUsername(username);
         const blog = await blogService.getBlogById(blogId);
         const userId = user.message.id;
-        const authorId = blog.message.authorid;
+        const authorId = blog.message.authorId;
         if(userId === authorId) next();
         else return res.status(403).send("Access denied!");
     }

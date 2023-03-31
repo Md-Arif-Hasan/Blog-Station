@@ -3,11 +3,12 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 exports.authentication = async (req, res, next) => {
-  let accessToken = req.cookies.jwt;
-  if (!accessToken) {
-    return res.status(403).send("Can't access this route!");
-  }
+ 
   try {
+    let accessToken = req.cookies.jwt;
+    if (!accessToken) {
+      return res.status(403).send("Can't access this route!");
+    }
     const { username } = jwt.verify(accessToken, process.env.JWT_SECRET);
     req.username = username;
     next();

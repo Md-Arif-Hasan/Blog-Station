@@ -4,8 +4,9 @@ const userInfo = require("../utils/userInfoValidation");
 
 ("use strict");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
+    userInfo.userInfoValidation(req.body);
     const registeredUser = await authService.register(req.body);
     if (registeredUser) {
       const accessToken = JWTToken.createJwtToken(registeredUser);
@@ -13,11 +14,11 @@ exports.register = async (req, res) => {
       return res.send(registeredUser);
     }
   } catch (error) {
-    return { status: error.statusCode, message: error.message };
+    next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const loggedInUser = await authService.login(req.body);
 
@@ -27,6 +28,6 @@ exports.login = async (req, res) => {
       return res.send(loggedInUser);
     }
   } catch (error) {
-    return { status: error.statusCode, message: error.message };
+   next(error);
   }
 };

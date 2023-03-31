@@ -1,5 +1,5 @@
 const UserDTO = require("../DTO/userDTO");
-const User = require("../models/userModel");
+const {User} = require("../models/index");
 
 ("use strict");
 
@@ -25,18 +25,14 @@ exports.getUserByUsername = async (username) => {
   return data;
 };
 
-exports.createUser = async (myUuid, username, email, hashedPassword) => {
-  try {
+exports.createUser = async (useruuid, username, email, hashedPassword) => {
     const user = await User.create({
-      id: myUuid,
+      id: useruuid,
       username: username,
       email: email,
       password: hashedPassword,
     });
     return user;
-  } catch (err) {
-    throw Object.assign(new Error(err.errors[0].message), { statusCode: 400 });
-  }
 };
 
 exports.updateUser = async (username, updatedPassword) => {

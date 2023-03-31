@@ -1,6 +1,5 @@
 const userRepo = require("../repository/userRepo");
-const userInfo = require("../utils/userInfoValidation");
-const password = require("../utils/hashingPassword");
+const hash = require("../utils/hashingPassword");
 const userDTO = require("../DTO/userDTO");
 const { v4: uuidv4 } = require("uuid");
 
@@ -13,7 +12,7 @@ exports.getAllUsers = async (offset, limit) => {
       statusCode: 404,
     });
   }
-  return { status: 200, message: fetchedUsers };
+  return {status: 200, message: fetchedUsers };
 };
 
 exports.getUserDtoByUsername = async (username) => {
@@ -23,7 +22,7 @@ exports.getUserDtoByUsername = async (username) => {
       statusCode: 404,
     });
   }
-  return { status: 200, message: new userDTO(fetchedUser) };
+  return {status: 200, message: new userDTO(fetchedUser) };
 };
 
 exports.getUserByUsername = async (username) => {
@@ -33,44 +32,39 @@ exports.getUserByUsername = async (username) => {
       statusCode: 404,
     });
   }
-  return { status: 200, message: fetchedUser };
+  return {status: 200, message: fetchedUser };
 };
 
 exports.createUser = async (user) => {
-  const infoValid = userInfo.userInfoValidation(user);
-  if (!infoValid.validity) return { status: 400, message: infoValid.message };
 
   const useruuid = uuidv4();
   const username = user.username.toLowerCase();
-  const hashedPassword = await password.hashingPassword(user.password);
+  const hashedPassword = await hash.hashingPassword(user.password);
 
-  try {
     const createdUser = await userRepo.createUser(
       useruuid,
       username,
       user.email,
       hashedPassword
     );
-    return { status: 201, message: createdUser };
-  } catch (error) {
-    return { status: error.statusCode, message: error.message };
-  }
+    return {status: 201, message: createdUser };
 };
 
-exports.updateUser = async (username, user) => {
-  const hashedPassword = await password.hashingPassword(user.password);
+exports.updateUser = async (username, password) => {
+
+  const hashedPassword = await hash.hashingPassword(password);
   const updatedUser = await userRepo.updateUser(username, hashedPassword);
 
   if (!updatedUser) {
     throw Object.assign(new Error("User not found!"), { statusCode: 404 });
   }
-  return { status: 200, message: "User updated successfully" };
+  return {status: 200, message: "User updated successfully" };
 };
 
 exports.deleteUser = async (username) => {
   const deletedUser = await userRepo.deleteUser(username.toLowerCase());
   if (deletedUser) {
-    return { status: 200, message: "User deleted successfully" };
+    return {status: 200, message: "User deleted successfully" };
   }
   throw Object.assign(new Error("User not found!"), { statusCode: 404 });
 };

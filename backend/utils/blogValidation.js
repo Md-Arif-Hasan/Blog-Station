@@ -1,12 +1,9 @@
 
 function blogValidation(title,description) {
-  if (!title)
-    return { validity: false, message: "Enter a valid title!" };
-  if (!description)
-    return { validity: false, message: "Enter a valid description" }
-   return { validity: true, message: "Title & descriptions are valid" }
+ 
+  if (!title) throw Object.assign(new Error("Enter a valid title!"), { statusCode: 400 });
+  if (!description) throw Object.assign(new Error("Enter a valid description!"), { statusCode: 400 });
 }
-
 module.exports = {
     blogValidation
 };
