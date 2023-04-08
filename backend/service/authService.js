@@ -18,6 +18,8 @@ exports.login = async (user) => {
         user.password,
         checkedUser.message.password
       );
+
+
       if (!isPasswordMatched) {
         throw Object.assign(new Error("Your password isn't correct!"), {
           statusCode: 401,

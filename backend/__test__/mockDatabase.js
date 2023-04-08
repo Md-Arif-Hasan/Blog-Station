@@ -1,10 +1,11 @@
 const userDB = [
     {
-        "id": "00bba26d-da0c-4a33-907f-a11e74da3b6f",
-        "username": "sifat",
-        "email": "sifat@gmail.com",
-        "createdAt": "2023-03-31T06:30:46.000Z",
-        "updatedAt": "2023-03-31T06:30:46.000Z"
+        "id": "2d805d2b-c234-4c3b-b574-291e82f48c5a",
+        "username": "arif",
+        "email": "arif@gmail.com",
+        "password": "12345",
+        "updatedAt": "2023-00-00T00:00:00.000Z",
+        "createdAt": "2023-00-00T00:00:00.000Z"
     },
     {
         "id": "3ad72706-486f-4039-95b6-554d99efe794",

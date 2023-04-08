@@ -51,7 +51,7 @@ exports.updateBlog = async (req, res, next) => {
       title,
       description
     );
-    res.status(updatedBlog.status).send(updatedBlog.message);
+    return sendResponse(req, res, updatedBlog.status, updatedBlog.message);
   } catch (error) {
     next(error);
   }
@@ -61,7 +61,7 @@ exports.deleteBlog = async (req, res, next) => {
   try {
     const blogId = req.params.blogId;
     const deletedBlog = await blogService.deleteBlog(blogId);
-    res.status(deletedBlog.status).send(deletedBlog.message);
+    return sendResponse(req, res, deletedBlog.status, deletedBlog.message);
   } catch (error) {
     next(error);
   }

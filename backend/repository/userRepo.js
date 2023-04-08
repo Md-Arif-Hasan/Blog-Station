@@ -7,7 +7,7 @@ exports.getAllUsers = async (offset, limit) => {
   const data = await User.findAll({
     offset,
     limit,
-    order: [["createdAt", "ASC"]],
+
   });
   const allUsers = [];
   data.forEach((element) => {
@@ -26,7 +26,7 @@ exports.getUserByUsername = async (username) => {
 };
 
 exports.createUser = async (useruuid, username, email, hashedPassword) => {
-    const user = await User.create({
+  const user = await User.create({
       id: useruuid,
       username: username,
       email: email,
@@ -53,7 +53,7 @@ exports.deleteUser = async (username) => {
 };
 
 exports.checkEmail = async (email) => {
-  const data = await User.findAll({
+  const data = await User.findOne({
     where: {
       email: email,
     },

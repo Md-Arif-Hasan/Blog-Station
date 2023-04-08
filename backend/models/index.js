@@ -15,7 +15,6 @@ Blog.belongsTo(User, { as: "author" }, {
 
 const test = async () => {
   await sequelize.sync({ force: false });
-  console.log("Index is synchronized successfully.");
 };
 test();
 

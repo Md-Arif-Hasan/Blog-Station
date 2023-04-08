@@ -6,8 +6,7 @@ exports.getAllBlogs = async (offset, limit) => {
   const allBlogs = await Blog.findAll({
     include : ["author"],
     offset,
-    limit,
-    order: [["createdAt", "ASC"]],
+    limit
   });
   return allBlogs;
 };
