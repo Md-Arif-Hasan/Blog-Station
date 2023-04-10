@@ -17,26 +17,30 @@ function isValidEmail(email) {
   return true;
 }
 
-function userInfoValidation(user) {
-
-  username = user.username;
-  email = user.email;
-  password = user.password;
+function userInfoValidation(username, email) {
   
-  
-  if (!username || !password) throw Object.assign(new Error("Enter all the fields!"), { statusCode: 400 });
+  if (!username || !password || !email) throw Object.assign(new Error("Enter all the fields!"), { statusCode: 400 });
   if (!isValidUsername(username)) throw Object.assign(new Error( "Enter a valid username"), { statusCode: 400 });
   if (!isValidPassword(password)) throw Object.assign(new Error( "Enter a valid password"), { statusCode: 400 });
   if (!isValidEmail(email)) throw Object.assign(new Error( "Enter a valid email"), { statusCode: 400 });
 }
 
 function userUpdateValidation(password) {
+  
   if (!password) throw Object.assign(new Error("Enter the password field!"), { statusCode: 400 });
   if (!isValidPassword(password)) throw Object.assign(new Error( "Enter a valid password"), { statusCode: 400 });
 }
 
 
+function userLoginValidation(username, password) {
+  if (!username || !password ) throw Object.assign(new Error("Enter all the fields!"), { statusCode: 400 });
+}
+
+
+
+
 module.exports = {
   userInfoValidation,
   userUpdateValidation,
+ userLoginValidation
 };

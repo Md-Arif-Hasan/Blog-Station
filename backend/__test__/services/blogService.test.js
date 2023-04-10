@@ -25,6 +25,7 @@ describe("Blog service - testing", () => {
       });
     });
 
+
     it("Should throw an error if the repository call fails", async () => {
       const offset = 0;
       const limit = 3;

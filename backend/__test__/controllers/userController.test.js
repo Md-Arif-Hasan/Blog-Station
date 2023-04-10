@@ -1,11 +1,9 @@
 const userController = require("../../controllers/userController");
 const userService = require("../../service/userService");
 const { sendResponse } = require("../../utils/contentNegotiation");
-const { userInfoValidation } = require("../../utils/userInfoValidation");
 
 const { userDB } = require("../mockDatabase");
 
-jest.mock("../../utils/userInfoValidation");
 jest.mock("../../utils/contentNegotiation");
 
 describe("User controller - testing", () => {
@@ -47,7 +45,7 @@ describe("User controller - testing", () => {
       };
       const res = {};
       const next = jest.fn();
-      const expectedError = new Error("Something went wrong");
+      const expectedError = new Error("An error occured!");
       jest
         .spyOn(userService, "getAllUsers")
         .mockRejectedValueOnce(expectedError);
@@ -59,7 +57,7 @@ describe("User controller - testing", () => {
   });
 
   describe("getUserByUsername method", () => {
-    it("should call service and return a response", async () => {
+    it("should call service and return a user", async () => {
       const req = {
         params: {
           username: "arif",
@@ -89,12 +87,12 @@ describe("User controller - testing", () => {
     it("should throws an error", async () => {
       const req = {
         params: {
-          username: "testuser",
+          username: "arif",
         },
       };
       const res = {};
       const next = jest.fn();
-      const expectedError = new Error("Something went wrong");
+      const expectedError = new Error("An error occured!");
       jest
         .spyOn(userService, "getUserDtoByUsername")
         .mockRejectedValueOnce(expectedError);
@@ -108,7 +106,7 @@ describe("User controller - testing", () => {
   describe("Update user method - testing", () => {
     it("should return a success response & updated data", async () => {
       const username = "arif";
-      const password = "password";
+      const password = "p12324346sdef";
       const req = {
         params: {
           username,
@@ -140,7 +138,42 @@ describe("User controller - testing", () => {
       expect(sendResponse).toHaveBeenCalledTimes(1);
       expect(response).toBe(expectedResponse);
     });
+
+
+    it('should throw an error to middleware when username parameter is missing', async () => {
+      const password = 'pass4234dsrr';
+      const req = {
+        params: { },
+        body: {
+           password
+        },
+      };
+      const res = {};
+      const next = jest.fn();
+      const expectedError = new Error("Enter a valid username parameter!");
+      await userController.updateUser(req, res, next);
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+
+
+
+    it('should throw an error to middleware when  password is missing', async () => {
+
+      const req = {
+        params: { username: "arif",},
+        body: {
+            
+        },
+      };
+      const res = {};
+      const next = jest.fn();
+      const expectedError = new Error("Enter the password field!");
+      await userController.updateUser(req, res, next);
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+
   });
+
 
   describe("Delete user - testing", () => {
     it("should return a success response", async () => {
@@ -168,5 +201,18 @@ describe("User controller - testing", () => {
       expect(userService.deleteUser).toHaveBeenCalledWith(username);
       expect(response).toBe(expectedResponse);
     });
+
+
+    it('should throw a error when id parameter is missing', async () => {
+      const req = {
+        params: {},
+      };
+      const res = {};
+      const next = jest.fn();
+      const expectedError =  new Error("Enter a valid username parameter!");
+      await userController.deleteUser(req, res, next);
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
   });
+
 });

@@ -22,8 +22,8 @@ exports.getBlogById = async (blogId) => {
     return {status: 200, message: new blogDTO(fetchedBlog) };
 };
 
-exports.createBlog = async (blog) => {
-  const createdBlog = await blogRepo.createBlog(blog);
+exports.createBlog = async (title, description) => {
+  const createdBlog = await blogRepo.createBlog(title, description);
   return {status: 201, message: createdBlog };
 };
 

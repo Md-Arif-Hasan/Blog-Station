@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/50</span>
+                <span class='fraction'>54/54</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>46/50</span>
+                <span class='fraction'>54/54</span>
             </div>
         
             
@@ -113,7 +113,11 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -140,39 +144,43 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const userService = require('../service/userService');
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const userService = require("../service/userService");
 const { sendResponse } = require("../utils/contentNegotiation");
 const { paginate } = require("../utils/pagination");
-const {userUpdateValidation} = require("../utils/userInfoValidation");
+const { userUpdateValidation } = require("../utils/userInfoValidation");
 &nbsp;
 ("use strict");
 &nbsp;
 exports.getAllUsers = async (req, res, next) =&gt; {
   try {
-    const { offset, limit } = paginate(req);
+    const { offset, limit } = paginate(req.query.pageNo, req.query.pageSize);
     const allUsers = await userService.getAllUsers(offset, limit);
     return sendResponse(req, res, allUsers.status, allUsers.message);
   } catch (error) {
@@ -189,29 +197,33 @@ exports.getUserByUsername = async (req, res, next) =&gt; {
   }
 };
 &nbsp;
-&nbsp;
 exports.updateUser = async (req, res, next) =&gt; {
   try {
     const username = req.params.username;
     const password = req.body.password;
 &nbsp;
+    if(!username) throw Object.assign(new Error("Enter a valid username parameter!"), { statusCode: 400 });
+&nbsp;
     userUpdateValidation(password);
-    
+&nbsp;
     const updatedUser = await userService.updateUser(username, password);
     return sendResponse(req, res, updatedUser.status, updatedUser.message);
-  } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    next(error)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  } catch (error) {
+    next(error);
+  }
 };
 &nbsp;
 exports.deleteUser = async (req, res, next) =&gt; {
   try {
+    if(!req.params.username) throw Object.assign(new Error("Enter a valid username parameter!"), { statusCode: 400 });
+&nbsp;
     const username = req.params.username.toLowerCase();
+&nbsp;
     const deletedUser = await userService.deleteUser(username);
     return sendResponse(req, res, deletedUser.status, deletedUser.message);
-  } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    next(error);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  } catch (error) {
+    next(error);
+  }
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -220,7 +232,7 @@ exports.deleteUser = async (req, res, next) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-04-08T19:51:02.480Z
+                at 2023-04-10T13:18:22.063Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

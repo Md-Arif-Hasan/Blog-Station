@@ -72,6 +72,25 @@ describe("Auth Controller - testing", () => {
       await authController.register(req, res, next);
       expect(next).toHaveBeenCalledWith(expectedError);
     });
+
+
+    it('should return a error to middleware, if required fields are missing', async () => {
+
+      const req = {
+        body: {
+        },
+      };
+      const res = {};
+      const next = jest.fn();
+
+      const expectedError = new Error("Enter all the fields!");
+      authService.login.mockRejectedValueOnce(expectedError);
+
+      await authController.login(req, res, next);
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+
+
   });
 
   describe("login", () => {
@@ -129,5 +148,25 @@ describe("Auth Controller - testing", () => {
       await authController.login(req, res, next);
       expect(next).toHaveBeenCalledWith(expectedError);
     });
+
+    it('should return a error to middleware, if required fields are missing', async () => {
+
+      const req = {
+        body: {
+        },
+      };
+      const res = {};
+      const next = jest.fn();
+
+      const expectedError = new Error("Enter all the fields!");
+      authService.login.mockRejectedValueOnce(expectedError);
+
+      await authController.login(req, res, next);
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+
+
+    });
+
+
   });
-});

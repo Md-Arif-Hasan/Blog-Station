@@ -1,17 +1,19 @@
 const authService = require("../service/authService");
 const { createJwtToken } = require("../utils/JWTToken");
-const { userInfoValidation } = require("../utils/userInfoValidation");
+const { userInfoValidation , userLoginValidation } = require("../utils/userInfoValidation");
 const { sendResponse } = require("../utils/contentNegotiation");
 
 ("use strict");
 
 exports.register = async (req, res, next) => {
   try {
-    userInfoValidation(req.body);
-    const registeredUser = await authService.register(req.body);
-    console.log(registeredUser.message);
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    userInfoValidation(username, email, password);
 
-    if (registeredUser) {
+    const registeredUser = await authService.register(req.body);
+
       const accessToken = createJwtToken(registeredUser);
       res.cookie("jwt", accessToken, { httpOnly: true });
 
@@ -21,7 +23,7 @@ exports.register = async (req, res, next) => {
         registeredUser.status,
         registeredUser.message
       );
-    }
+    
   } catch (error) {
     next(error);
   }
@@ -29,14 +31,16 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const loggedInUser = await authService.login(req.body);
+    const username = req.body.username;
+    const password = req.body.password;
+    userLoginValidation(username, password);
 
-    if (loggedInUser) {
-      console.log(loggedInUser);
+    const loggedInUser = await authService.login(req.body);
+  
       const accessToken = createJwtToken(loggedInUser);
       res.cookie("jwt", accessToken, { httpOnly: true });
       return sendResponse(req, res, loggedInUser.status, loggedInUser.message);
-    }
+    
   } catch (error) {
     next(error);
   }

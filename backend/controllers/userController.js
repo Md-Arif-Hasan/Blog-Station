@@ -7,7 +7,7 @@ const { userUpdateValidation } = require("../utils/userInfoValidation");
 
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const { offset, limit } = paginate(req);
+    const { offset, limit } = paginate(req.query.pageNo, req.query.pageSize);
     const allUsers = await userService.getAllUsers(offset, limit);
     return sendResponse(req, res, allUsers.status, allUsers.message);
   } catch (error) {
@@ -29,6 +29,8 @@ exports.updateUser = async (req, res, next) => {
     const username = req.params.username;
     const password = req.body.password;
 
+    if(!username) throw Object.assign(new Error("Enter a valid username parameter!"), { statusCode: 400 });
+
     userUpdateValidation(password);
 
     const updatedUser = await userService.updateUser(username, password);
@@ -40,7 +42,10 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
+    if(!req.params.username) throw Object.assign(new Error("Enter a valid username parameter!"), { statusCode: 400 });
+
     const username = req.params.username.toLowerCase();
+
     const deletedUser = await userService.deleteUser(username);
     return sendResponse(req, res, deletedUser.status, deletedUser.message);
   } catch (error) {

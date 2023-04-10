@@ -21,8 +21,10 @@ exports.getBlogById = async (blogId) => {
   return fetchedBlog;
 };
 
-exports.createBlog = async (blog) => {
-    const createdBlog = await Blog.create(blog);
+exports.createBlog = async (title, description) => {
+    const createdBlog = await Blog.create({
+      title, description
+    });
     return createdBlog;
 };
 
