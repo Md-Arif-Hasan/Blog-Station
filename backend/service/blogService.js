@@ -1,84 +1,45 @@
 const blogRepo = require("../repository/blogRepo");
-const {blogValidation} = require("../utils/blogValidation");
 const blogDTO = require("../DTO/blogDTO");
-const {paginate} = require("../utils/pagination");
 
-('use strict');
+("use strict");
 
-exports.getAllBlogs = async (req) => {
-  try {
-    const {offset, limit} = paginate(req);
-    const fetchedBlogs = await blogRepo.getAllBlogs(offset,limit);
-    if (!fetchedBlogs.length) {
-      return { status: 404, message: "No blog in users table!" };
-    }
-    return { status: 200, message: fetchedBlogs };
-  } catch (error) {
-    return { status: 404, message: `It's a ${error.name}` };
+exports.getAllBlogs = async (offset, limit) => {
+  const fetchedBlogs = await blogRepo.getAllBlogs(offset, limit);
+  if (!fetchedBlogs.length) {
+    throw Object.assign(new Error("No blog in users table!"), {
+      statusCode: 404,
+    });
   }
+  return {status: 200, message: fetchedBlogs };
 };
 
 exports.getBlogById = async (blogId) => {
-  try {
-    const fetchedBlog = await blogRepo.getBlogById(blogId);
+  const fetchedBlog = await blogRepo.getBlogById(blogId);
 
-    if (!fetchedBlog) {
-      return { status: 404, message: "Thi Blog doesn't exist in database!" };
-    }
-    return { status: 200, message: new blogDTO(fetchedBlog) };
-  } catch (error) {
-    return { status: 404, message: `No Blog found` };
-  }
+  if (!fetchedBlog) {
+    throw Object.assign(new Error("Blog is not found!"), { statusCode: 404 });
+  } 
+    return {status: 200, message: new blogDTO(fetchedBlog) };
+};
+
+exports.createBlog = async (title, description) => {
+  const createdBlog = await blogRepo.createBlog(title, description);
+  return {status: 201, message: createdBlog };
 };
 
 
-exports.createBlog = async (blog) => {
-  const blogInfoChecker = blogValidation(blog.title, blog.description);
-  if (!blogInfoChecker.validity) return { status: 400, message: blogInfoChecker.message };
-  
-  try {
-    await blogRepo.createBlog(blog);
-    return { status: 200, message: "Blog created successfully" };
-  } catch (error) {
-    return {
-      status: 500,
-      message: `Service problem` 
-    };
+exports.updateBlog = async (blogId, title, description) => {
+
+  const updatedBlog = await blogRepo.updateBlog(blogId, title, description);
+
+  if (!updatedBlog) {
+    throw Object.assign(new Error("Blog not found!"), { statusCode: 404 });
   }
+  return {status: 200, message: "Blog updated successfully" };
 };
-
-exports.updateBlog = async (blogId, blog) => {
-  try {
-    if(!blogId){
-      return { status: 400, message: "Invalid parameter!" };
-    }
-
-   const title = blog.title;
-   const description = blog.description; 
-
-    if(!title|| !description){
-      return { status: 400, message: "Invalid request!" };
-    }
-    const result = await blogRepo.updateBlog(blogId, title, description);
-
-    if (!result) {
-      return { status: 404, message: "Blog not found!" };
-    }
-    return { status: 200, message: "Blog updated successfully" };
-  } catch (error) {
-   return { status: 409, message: `Unhandles Error!` };
-  }
-};
-
-
 
 exports.deleteBlog = async (blogId) => {
-  try {
-    const result = await blogRepo.deleteBlog(blogId);
-    if (result)
-      return { status: 200, message: "Blog deleted successfully" };
-    else return { status: 404, message: "Blog not found" };
-  } catch (error) {
-    return { status: 409, message: `Unhandled error` };
-  }
+  const deletedBlog = await blogRepo.deleteBlog(blogId);
+  if (deletedBlog) return { status: 200, message: "Blog deleted successfully" };
+  throw Object.assign(new Error("Blog not found!"), { statusCode: 404 });
 };

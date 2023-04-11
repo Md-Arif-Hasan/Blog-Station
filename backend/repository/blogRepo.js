@@ -1,70 +1,46 @@
-const Blog = require("../models/blogModel");
+const {Blog} = require("../models/index");
 
-('use strict');
+("use strict");
 
-exports.getAllBlogs = async (offset,limit) => {
-  try {
-    const allBlogs = await Blog.findAll({offset, limit,  order: [['createdAt','ASC']] });
-    return allBlogs;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+exports.getAllBlogs = async (offset, limit) => {
+  const allBlogs = await Blog.findAll({
+    include : ["author"],
+    offset,
+    limit
+  });
+  return allBlogs;
 };
 
 exports.getBlogById = async (blogId) => {
-  try {
-    const fetchedBlog = await Blog.findOne({
-      where: {
-        id: blogId,
-      },
+  const fetchedBlog = await Blog.findOne({
+    include : ["author"],
+    where: {
+      id: blogId,
+    },
+  });
+  return fetchedBlog;
+};
+
+exports.createBlog = async (title, description) => {
+    const createdBlog = await Blog.create({
+      title, description
     });
-    return fetchedBlog;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
-};
-
-exports.createBlog = async (blog) => {
-  try{
-    const createdBlog = await Blog.create(blog);
     return createdBlog;
-  }
-  catch(err){
-    console.log(err.stack);
-    throw err;
-  }
 };
-
-
 
 exports.updateBlog = async (blogId, title, description) => {
-  try {
-    const result = await Blog.update(
-      { title,
-        description
-      },
-      { where: { id: blogId } }
-    );
-    return result;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const result = await Blog.update(
+    { title, description },
+    { where: { id: blogId } }
+  );
+  return result;
 };
 
 exports.deleteBlog = async (blogId) => {
-  try {
-    const blog = await Blog.destroy({
-      where: {
-        id: blogId,
-      },
-    });
-    return blog;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const blog = await Blog.destroy({
+    where: {
+      id: blogId,
+    },
+  });
+  return blog;
 };
-

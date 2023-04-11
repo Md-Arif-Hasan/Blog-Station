@@ -20,12 +20,11 @@ const User = sequelize.define("users", {
     unique: true,
     validate: {
       notNull: {
-        msg: "Please enter your username. "
+        msg: "Please enter your username. ",
       },
-      isAlphanumeric:{
-        msg:"Username must contain alphanumeric values. "
-      }
-      
+      isAlphanumeric: {
+        msg: "Username must contain alphanumeric values. ",
+      },
     },
   },
   email: {
@@ -34,11 +33,11 @@ const User = sequelize.define("users", {
     unique: true,
     validate: {
       notNull: {
-        msg:"Please enter a valid email. "
+        msg: "Please enter a valid email. ",
       },
-      isEmail:{
-        msg:"Email is not valid! "
-      }
+      isEmail: {
+        msg: "Email is not valid!!",
+      },
     },
   },
   password: {
@@ -46,18 +45,11 @@ const User = sequelize.define("users", {
     allowNull: false,
     validate: {
       notNull: {
-        msg:"Please enter your password! "
+        msg: "Please enter your password! ",
       },
     },
-  }
-},
-);
+  },
+});
 
-const test = async () => {
-  console.log("The table for the User model was just (re)created!");
-  await sequelize.sync({ force: false });
-  console.log("All models were synchronized successfully.");
-};
-test();
 
 module.exports = User;

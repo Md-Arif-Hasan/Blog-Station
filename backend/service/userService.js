@@ -1,80 +1,70 @@
 const userRepo = require("../repository/userRepo");
-const crypto = require("crypto");
-const userInfo = require("../utils/userInfoValidation");
-const password = require("../utils/hashingPassword");
+const hash = require("../utils/hashingPassword");
 const userDTO = require("../DTO/userDTO");
+const { v4: uuidv4 } = require("uuid");
 
-('use strict');
+("use strict");
 
-exports.getAllUsers = async (req) => {
-  try {
-    const fetchedUsers = await userRepo.getAllUsers(req);
-    if (!fetchedUsers.length) {
-      return { status: 404, message: "No data in users table!" };
-    }
-    return { status: 200, message: fetchedUsers };
-  } catch (error) {
-    return { status: 500, message: `It's a ${error.name}` };
+exports.getAllUsers = async (offset, limit) => {
+  const fetchedUsers = await userRepo.getAllUsers(offset, limit);
+  if (!fetchedUsers.length) {
+    throw Object.assign(new Error("No user in users table!"), {
+      statusCode: 404,
+    });
   }
+  return {status: 200, message: fetchedUsers };
 };
 
-
-exports.getUserByUsername = async (username, usedDTO) => {
-  try {
-    const fetchedUser = await userRepo.getUserByUsername(username);
-    if (!fetchedUser) {
-      return { status: 404, message: "Username doesn't exist in database!" };
-    }
-    if(!usedDTO){
-      return { status: 200, message: fetchedUser };
-    } else{
-      return { status: 200, message: new userDTO(fetchedUser) };
-    }
-  } catch (error) {
-    return { status: 500, message: `It's a ${error.name}` };
+exports.getUserDtoByUsername = async (username) => {
+  const fetchedUser = await userRepo.getUserByUsername(username);
+  if (!fetchedUser) {
+    throw Object.assign(new Error("Username doesn't exist in database!"), {
+      statusCode: 404,
+    });
   }
+  return {status: 200, message: new userDTO(fetchedUser) };
 };
 
-exports.createUser = async (body) => {
-
-  const infoValid = userInfo.userInfoValidation(body);
-  if (!infoValid.validity) return { status: 400, message: infoValid.message };
-
-  const myUuid = crypto.randomUUID();
-  const username = body.username.toLowerCase();
-  const hashedPassword = await password.hashingPassword(body.password);
-
-  try {
-    await userRepo.createUser(myUuid, username, body.email, hashedPassword);
-    return { status: 200, message: "User created successfully" };
-  } catch (error) {
-    return {
-      status: 500,
-      message: `It's a ${error.name}`,
-    };
+exports.getUserByUsername = async (username) => {
+  const fetchedUser = await userRepo.getUserByUsername(username);
+  if (!fetchedUser) {
+    throw Object.assign(new Error("Username doesn't exist in database!"), {
+      statusCode: 404,
+    });
   }
+  return {status: 200, message: fetchedUser };
 };
 
-exports.updateUser = async (username, body) => {
-  try {
-    const hashedPassword = await password.hashingPassword(body.password);
-    const data = await userRepo.updateUser(username, hashedPassword);
-    if (!data) {
-      return { status: 404, message: "User not found!" };
-    }
-    return { status: 200, message: "User updated successfully" };
-  } catch (error) {
-   return { status: 500, message: `It's a ${error.name}`};
+exports.createUser = async (user) => {
+
+  const useruuid = uuidv4();
+  const username = user.username.toLowerCase();
+  const hashedPassword = await hash.hashingPassword(user.password);
+
+    const createdUser = await userRepo.createUser(
+      useruuid,
+      username,
+      user.email,
+      hashedPassword
+    );
+    return {status: 201, message: createdUser };
+};
+
+exports.updateUser = async (username, password) => {
+
+  const hashedPassword = await hash.hashingPassword(password);
+  const updatedUser = await userRepo.updateUser(username, hashedPassword);
+
+  if (!updatedUser) {
+    throw Object.assign(new Error("User not found!"), { statusCode: 404 });
   }
+  return {status: 200, message: "User updated successfully" };
 };
 
 exports.deleteUser = async (username) => {
-  try {
-    const result = await userRepo.deleteUser(username.toLowerCase());
-    if (result)
-      return { status: 200, message: "User deleted successfully" };
-    else return { status: 404, message: "User not found" };
-  } catch (error) {
-    return { status: 500, message: `It's a ${error.name}` };
+  const deletedUser = await userRepo.deleteUser(username.toLowerCase());
+  if (deletedUser) {
+    return {status: 200, message: "User deleted successfully" };
   }
+  throw Object.assign(new Error("User not found!"), { statusCode: 404 });
 };

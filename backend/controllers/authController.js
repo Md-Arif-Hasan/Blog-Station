@@ -1,46 +1,47 @@
 const authService = require("../service/authService");
-const JWTToken = require("../utils/JWTToken");
-const dotenv = require("dotenv");
-dotenv.config();
+const { createJwtToken } = require("../utils/JWTToken");
+const { userInfoValidation , userLoginValidation } = require("../utils/userInfoValidation");
+const { sendResponse } = require("../utils/contentNegotiation");
 
-('use strict');
+("use strict");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
-    const registeredUser = await authService.register(req.body);
-    if (registeredUser) {
-      const accessToken = JWTToken.createJwtToken(registeredUser, res);
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    userInfoValidation(username, email, password);
 
+    const registeredUser = await authService.register(req.body);
+
+      const accessToken = createJwtToken(registeredUser);
       res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(registeredUser);
-    } else {
-      res.status(400).send("Please try to register again");
-    }
-  } catch (err) {
-    res.status(400).send("Error!");
+
+      return sendResponse(
+        req,
+        res,
+        registeredUser.status,
+        registeredUser.message
+      );
+    
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
-    const usedDTO = false;
-    const loggedInUser = await authService.login(req.body,usedDTO);
+    const username = req.body.username;
+    const password = req.body.password;
+    userLoginValidation(username, password);
 
-    if (loggedInUser) {
-      const accessToken = JWTToken.createJwtToken(loggedInUser, res);
-
+    const loggedInUser = await authService.login(req.body);
+  
+      const accessToken = createJwtToken(loggedInUser);
       res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(loggedInUser);
-    } else {
-      res.status(400).send("Incorrect username or password");
-    }
-  } catch (err) {
-    res.status(400).send("Error!");
+      return sendResponse(req, res, loggedInUser.status, loggedInUser.message);
+    
+  } catch (error) {
+    next(error);
   }
 };

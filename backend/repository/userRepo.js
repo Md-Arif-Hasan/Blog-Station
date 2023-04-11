@@ -1,90 +1,62 @@
 const UserDTO = require("../DTO/userDTO");
-const User = require("../models/userModel");
-const { paginate } = require("../utils/pagination");
+const {User} = require("../models/index");
 
-('use strict');
+("use strict");
 
-exports.getAllUsers = async () => {
-  try {
-    const {offset, limit} = paginate(req);
-    const data = await User.findAll({ offset,limit, order: [['createdAt','ASC']] });
-    const allUsers = [];
-    data.forEach((element) => {
-      allUsers.push(new UserDTO(element));
-    });
+exports.getAllUsers = async (offset, limit) => {
+  const data = await User.findAll({
+    offset,
+    limit,
 
-    return allUsers;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  });
+  const allUsers = [];
+  data.forEach((element) => {
+    allUsers.push(new UserDTO(element));
+  });
+  return allUsers;
 };
 
 exports.getUserByUsername = async (username) => {
-  try {
-    const data = await User.findOne({
-      where: {
-        username: username,
-      },
-    });
-    return data;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const data = await User.findOne({
+    where: {
+      username: username,
+    },
+  });
+  return data;
 };
 
-exports.createUser = async (myUuid, username, email, hashedPassword) => {
-  try {
-    const user = await User.create({
-      id: myUuid,
+exports.createUser = async (useruuid, username, email, hashedPassword) => {
+  const user = await User.create({
+      id: useruuid,
       username: username,
       email: email,
       password: hashedPassword,
     });
     return user;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
 };
 
 exports.updateUser = async (username, updatedPassword) => {
-  try {
-    const result = await User.update(
-      { password: updatedPassword },
-      { where: { username: username } }
-    );
-    return result;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const result = await User.update(
+    { password: updatedPassword },
+    { where: { username: username } }
+  );
+  return result;
 };
 
 exports.deleteUser = async (username) => {
-  try {
-    const user = await User.destroy({
-      where: {
-        username: username,
-      },
-    });
-    return user;
-  } catch (err) {
-    console.log(err.stack);
-    throw err;
-  }
+  const user = await User.destroy({
+    where: {
+      username: username,
+    },
+  });
+  return user;
 };
 
 exports.checkEmail = async (email) => {
-  try {
-    const data = await User.findAll({
-      where: {
-        email: email,
-      },
-    });
-    return data;
-  } catch (err) {
-    console.log(err.stack);
-  }
+  const data = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+  return data;
 };
