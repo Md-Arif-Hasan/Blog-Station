@@ -6,8 +6,7 @@ class createdBlog {
   constructor(blog) {
     this.title = blog.title;
     this.description = blog.description;
-    this.authorId = blog.authorId;
-    this.id = "1";
+    this.id = '6';
   }
 }
 
@@ -79,45 +78,44 @@ describe("Blog repositoy - testing", () => {
     });
   });
 
-  describe("Create blog - testing", () => {
-    it("Created blog should be returned", async () => {
-      const blog = {
-        title: "Blog no .1",
-        description: "This is my first blog",
-        authorId: "1",
-      };
-
-      const newBlog = new createdBlog(blog);
 
 
-      jest.spyOn(Blog, 'create').mockResolvedValue(newBlog);
-
+  describe('Testing Create Story function: ', () => {
+    it('should create an Story and return a Story body: ', async () => {
+      const title = 'Test';
+      const description = 'Hello World!';
+      const expectedBlog= { title, description };
+      jest
+        .spyOn(Blog, 'create')
+        .mockImplementation((blog) => new createdBlog(blog));
       const response = await blogRepository.createBlog(
-      blog
+        title,
+        description,
       );
-
       expect(Blog.create).toHaveBeenCalledTimes(1);
-      expect(Blog.create).toHaveBeenCalledWith(blog);
-      expect(response).toBe(newBlog);
+      expect(Blog.create).toHaveBeenCalledWith({
+        title,
+        description,
+      });
+      expect(response).toEqual(expect.objectContaining(expectedBlog));
     });
 
-    it("should throw an error if database query fails", async () => {
-        const blog = {
-            title: "Blog no .1",
-            description: "This is my first blog",
-            authorId: "1",
-          };
-
-      const newBlog = new createdBlog(blog);
-          
-      const error = new Error("Error occured!");
-      jest.spyOn(Blog, "create").mockRejectedValueOnce(error);
+    it('should throw an error if there is an error in the database query', async () => {
+      const title = 'Test';
+      const description = 'Hello World!';
+      const expectedError = new Error('Database error');
+      jest.spyOn(Blog, 'create').mockRejectedValueOnce(expectedError);
 
       await expect(
-        blogRepository.createBlog(newBlog)
-      ).rejects.toThrow(error);
+        blogRepository.createBlog(title, description)
+      ).rejects.toThrow(expectedError);
     });
   });
+
+
+
+  
+
 
   describe("Delete blog function - testing", () => {
     it("A blog should be deleted", async () => {
@@ -163,7 +161,7 @@ describe("Blog repositoy - testing", () => {
 
       jest.spyOn(Blog, "update").mockResolvedValueOnce([]);
 
-      const blog = await blogRepository.updateBlog(blogId, title, description);
+       await blogRepository.updateBlog(blogId, title, description);
 
       expect(Blog.update).toHaveBeenCalledWith(
         { title, description },
