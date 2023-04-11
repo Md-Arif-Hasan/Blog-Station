@@ -80,10 +80,10 @@ describe("Blog repositoy - testing", () => {
 
 
 
-  describe('Testing Create Story function: ', () => {
-    it('should create an Story and return a Story body: ', async () => {
-      const title = 'Test';
-      const description = 'Hello World!';
+  describe(' Create blog repo - testing ', () => {
+    it('should create a blog  ', async () => {
+      const title = 'Blog no 1';
+      const description = 'Hello my blog!';
       const expectedBlog= { title, description };
       jest
         .spyOn(Blog, 'create')
@@ -101,8 +101,8 @@ describe("Blog repositoy - testing", () => {
     });
 
     it('should throw an error if there is an error in the database query', async () => {
-      const title = 'Test';
-      const description = 'Hello World!';
+      const title = 'Blog no 1';
+      const description = 'Hello my blog!';
       const expectedError = new Error('Database error');
       jest.spyOn(Blog, 'create').mockRejectedValueOnce(expectedError);
 
