@@ -28,11 +28,9 @@ exports.getUserByUsername = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const username = req.params.username.toLowerCase();
-    const password = req.body.password;
-
-    userInfo.userUpdateValidation(password);
-    
-    const updatedUser = await userService.updateUser(username, password);
+    const { oldPassword, newPassword } = req.body;
+  
+    const updatedUser = await userService.updateUser(username,  oldPassword, newPassword);
     res.status(updatedUser.status).send(updatedUser.message);
   } catch (error) {
     next(error)

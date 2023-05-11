@@ -38,5 +38,5 @@ function userUpdateValidation(password) {
 
 module.exports = {
   userInfoValidation,
-  userUpdateValidation,
+  userUpdateValidation
 };

@@ -2,9 +2,20 @@ const express = require("express");
 const app = express();
 const routing = require("./routes/index");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const {errorHandlerMiddleware} = require("./middleware/errorHandler");
 dotenv.config();
 app.use(express.json());
+
+
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
+  credentials:true,
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+}));
+
+
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT;

@@ -1,17 +1,20 @@
 const blogRepo = require("../repository/blogRepo");
 const blogDTO = require("../DTO/blogDTO");
+const userService = require("../service/userService");
+
 
 ("use strict");
 
 exports.getAllBlogs = async (offset, limit) => {
   const fetchedBlogs = await blogRepo.getAllBlogs(offset, limit);
-  if (!fetchedBlogs.length) {
+  if (!fetchedBlogs.rows.length) {
     throw Object.assign(new Error("No blog in users table!"), {
       statusCode: 404,
     });
   }
   return {status: 200, message: fetchedBlogs };
 };
+
 
 exports.getBlogById = async (blogId) => {
   const fetchedBlog = await blogRepo.getBlogById(blogId);
@@ -22,9 +25,25 @@ exports.getBlogById = async (blogId) => {
     return {status: 200, message: new blogDTO(fetchedBlog) };
 };
 
-exports.createBlog = async (blog) => {
+
+exports.getBlogsByAuthorId = async (authorId, offset, limit) => {
+  const fetchedBlogs = await blogRepo.getBlogsByAuthorId(authorId, offset, limit);
+
+  if (!fetchedBlogs.rows.length) {
+    throw Object.assign(new Error("Blog is not found!"), { statusCode: 404 });
+  } 
+    return {status: 200, message:fetchedBlogs};
+};
+
+  
+exports.createBlog = async (blog, username) => {
+
+  const authorExists = await userService.getUserByUsername(username);
+  if(authorExists){
+    blog.authorId = authorExists.message.id;
   const createdBlog = await blogRepo.createBlog(blog);
   return {status: 201, message: createdBlog };
+  }
 };
 
 

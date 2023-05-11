@@ -1,6 +1,8 @@
 const authService = require("../service/authService");
 const JWTToken = require("../utils/JWTToken");
 const userInfo = require("../utils/userInfoValidation");
+const { sendResponse } = require("../utils/contentNegotiation");
+
 
 ("use strict");
 
@@ -10,7 +12,7 @@ exports.register = async (req, res, next) => {
     const registeredUser = await authService.register(req.body);
     if (registeredUser) {
       const accessToken = JWTToken.createJwtToken(registeredUser);
-      res.cookie("jwt", accessToken, { httpOnly: true });
+      res.cookie("jwt", accessToken, { sameSite: 'none', secure: true });
       return res.send(registeredUser);
     }
   } catch (error) {
@@ -24,10 +26,11 @@ exports.login = async (req, res, next) => {
 
     if (loggedInUser) {
       const accessToken = JWTToken.createJwtToken(loggedInUser);
-      res.cookie("jwt", accessToken, { httpOnly: true });
+      res.cookie("jwt", accessToken, { sameSite: 'none' , secure: true  });
       return res.send(loggedInUser);
     }
   } catch (error) {
    next(error);
   }
 };
+

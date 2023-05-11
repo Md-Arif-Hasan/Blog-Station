@@ -7,7 +7,7 @@ exports.getAllUsers = async (offset, limit) => {
   const data = await User.findAll({
     offset,
     limit,
-    order: [["createdAt", "ASC"]],
+    order: [["updatedAt", "DESC"]],
   });
   const allUsers = [];
   data.forEach((element) => {

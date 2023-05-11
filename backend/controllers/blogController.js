@@ -24,6 +24,17 @@ exports.getBlogById = async (req, res, next) => {
   }
 };
 
+exports.getBlogsByAuthorId = async (req, res, next) => {
+  try {
+    const { offset, limit } = paginate(req);
+    const Blogs = await blogService.getBlogsByAuthorId(req.params.authorId, offset,limit);
+    return sendResponse(req, res, Blogs.status, Blogs.message);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 exports.createBlog = async (req, res, next) => {
   try {
     const title = req.body.title;
@@ -31,7 +42,7 @@ exports.createBlog = async (req, res, next) => {
 
     blogValidation(title, description);
 
-    const createdBlog = await blogService.createBlog(req.body);
+    const createdBlog = await blogService.createBlog(req.body, req.username);
     return sendResponse(req, res, createdBlog.status, createdBlog.message);
   } catch (error) {
     next(error);

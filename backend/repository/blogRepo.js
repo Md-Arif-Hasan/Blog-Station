@@ -1,20 +1,21 @@
-const {Blog} = require("../models/index");
+const { Blog } = require("../models/index");
 
 ("use strict");
 
 exports.getAllBlogs = async (offset, limit) => {
-  const allBlogs = await Blog.findAll({
-    include : ["author"],
+  const allBlogs = await Blog.findAndCountAll({
+    include: ["author"],
     offset,
     limit,
-    order: [["createdAt", "ASC"]],
+    order: [["updatedAt", "DESC"]],
   });
   return allBlogs;
 };
 
 exports.getBlogById = async (blogId) => {
   const fetchedBlog = await Blog.findOne({
-    include : ["author"],
+    include: ["author"],
+    order: [["updatedAt", "DESC"]],
     where: {
       id: blogId,
     },
@@ -22,9 +23,22 @@ exports.getBlogById = async (blogId) => {
   return fetchedBlog;
 };
 
+exports.getBlogsByAuthorId = async (authorId, offset, limit) => {
+
+  console.log(offset+"   "+limit)
+  const fetchedBlog = await Blog.findAndCountAll({
+    include: ["author"],
+    offset,
+    limit,
+    order: [["updatedAt", "DESC"]],
+    where: { authorId: authorId },
+  });
+  return fetchedBlog;
+};
+
 exports.createBlog = async (blog) => {
-    const createdBlog = await Blog.create(blog);
-    return createdBlog;
+  const createdBlog = await Blog.create(blog);
+  return createdBlog;
 };
 
 exports.updateBlog = async (blogId, title, description) => {

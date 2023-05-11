@@ -1,5 +1,5 @@
 const userRepo = require("../repository/userRepo");
-const hash = require("../utils/hashingPassword");
+const {hashingPassword, checkPassword} = require("../utils/hashingPassword");
 const userDTO = require("../DTO/userDTO");
 const { v4: uuidv4 } = require("uuid");
 
@@ -35,11 +35,24 @@ exports.getUserByUsername = async (username) => {
   return {status: 200, message: fetchedUser };
 };
 
+
+
+exports.getUserPassword = async(username) => {
+  const fetchedUser = await userRepo.getUserByUsername(username);
+  if (!fetchedUser)
+  throw Object.assign(new Error("Username doesn't exist in database!"), {
+    statusCode: 404,
+  });
+  return  {status: 200, message: fetchedUser };
+}
+
+
+
 exports.createUser = async (user) => {
 
   const useruuid = uuidv4();
   const username = user.username.toLowerCase();
-  const hashedPassword = await hash.hashingPassword(user.password);
+  const hashedPassword = await hashingPassword(user.password);
 
     const createdUser = await userRepo.createUser(
       useruuid,
@@ -50,9 +63,24 @@ exports.createUser = async (user) => {
     return {status: 201, message: createdUser };
 };
 
-exports.updateUser = async (username, password) => {
+exports.updateUser = async (username, oldPassword, newPassword) => {
 
-  const hashedPassword = await hash.hashingPassword(password);
+  const checkedUser = await this.getUserByUsername(username.toLowerCase());
+
+  if (checkedUser.message) {
+    const isPasswordMatched = await checkPassword(
+      oldPassword,
+      checkedUser.message.password
+    );
+
+    if (!isPasswordMatched) {
+      throw Object.assign(new Error("Your password isn't correct!"), {
+        statusCode: 401,
+      });
+    }
+  }
+
+  const hashedPassword = await hashingPassword(newPassword);
   const updatedUser = await userRepo.updateUser(username, hashedPassword);
 
   if (!updatedUser) {

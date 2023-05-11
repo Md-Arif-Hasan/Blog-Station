@@ -24,7 +24,7 @@ const Blog = sequelize.define("blogs", {
     },
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
     validate: {
       notNull: {
