@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 const routing = require("./routes/index");
 const dotenv = require("dotenv");
+dotenv.config();
+//const HOST = process.env.HOST_NAME;
 const cors = require("cors");
 const {errorHandlerMiddleware} = require("./middleware/errorHandler");
-dotenv.config();
 app.use(express.json());
 
 
