@@ -20,7 +20,9 @@ app.use(cors({
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+const HOST = process.env.HOST;
+
+app.listen(PORT, HOST, () => {
   console.log(`Blog station user service is listening on port ${PORT}`);
 });
 

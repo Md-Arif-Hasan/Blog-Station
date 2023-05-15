@@ -16,7 +16,7 @@ const errorHandlerMiddleware = (error, req, res, next) => {
         res.status(400).send({ status: 400, message: error.message });
       break;
     default:
-        res.status(500).send({ status: 500, message: "Internal Server Error!" });
+        res.status(500).send({ status: 500, message: "Internal Server Errorr!" });
       break;
   }
 };
