@@ -9,12 +9,9 @@ async function hashingPassword(password) {
   return hashedPassword;
 }
 
-async function checkPassword(password, hashedPassword){
-
-  const isValidPassword = await bcrypt.compare(password,hashedPassword);
-     return isValidPassword;
+async function checkPassword(password, hashedPassword) {
+  const isValidPassword = await bcrypt.compare(password, hashedPassword);
+  return isValidPassword;
 }
 
-module.exports = { hashingPassword , checkPassword};
-
-
+module.exports = { hashingPassword, checkPassword };

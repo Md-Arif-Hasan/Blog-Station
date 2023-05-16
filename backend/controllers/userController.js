@@ -1,31 +1,48 @@
 const userService = require("../service/userService");
-const {sendResponse} = require("../utils/contentNegotiation");
+const { sendResponse } = require("../utils/contentNegotiation");
+const { paginate } = require("../utils/pagination");
+const userInfo = require("../utils/userInfoValidation");
 
-('use strict');
+("use strict");
 
-exports.getAllUsers = async (req, res) => {
-  const data = await userService.getAllUsers(req);
-  return sendResponse(req,res,data.status, data.message);
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const { offset, limit } = paginate(req);
+    const allUsers = await userService.getAllUsers(offset, limit);
+    return sendResponse(req, res, allUsers.status, allUsers.message);
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.getUserByUsername = async (req, res) => {
-  const data = await userService.getUserByUsername(req.params.username);
-  return sendResponse(req,res,data.status, data.message);
+exports.getUserByUsername = async (req, res, next) => {
+  try {
+    const oneUser = await userService.getUserDtoByUsername(req.params.username);
+    return sendResponse(req, res, oneUser.status, oneUser.message);
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.createUser = async (req, res) => {
-  const data = await userService.createUser(req.body);
-  res.status(data.status).send(data.message);
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    const username = req.params.username.toLowerCase();
+    const { oldPassword, newPassword } = req.body;
+  
+    const updatedUser = await userService.updateUser(username,  oldPassword, newPassword);
+    res.status(updatedUser.status).send(updatedUser.message);
+  } catch (error) {
+    next(error)
+  }
 };
 
-exports.updateUser = async (req, res) => {
-  const username = req.params.username.toLowerCase();
-  const data = await userService.updateUser(username, req.body);
-  res.status(data.status).send(data.message);
-};
-
-exports.deleteUser = async (req, res) => {
-  const username = req.params.username.toLowerCase();
-  const data = await userService.deleteUser(username);
-  res.status(data.status).send(data.message);
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const username = req.params.username.toLowerCase();
+    const deletedUser = await userService.deleteUser(username);
+    res.status(deletedUser.status).send(deletedUser.message);
+  } catch (error) {
+    next(error);
+  }
 };

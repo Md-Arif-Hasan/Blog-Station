@@ -1,46 +1,36 @@
 const authService = require("../service/authService");
 const JWTToken = require("../utils/JWTToken");
-const dotenv = require("dotenv");
-dotenv.config();
+const userInfo = require("../utils/userInfoValidation");
+const { sendResponse } = require("../utils/contentNegotiation");
 
-('use strict');
 
-exports.register = async (req, res) => {
+("use strict");
+
+exports.register = async (req, res, next) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
+    userInfo.userInfoValidation(req.body);
     const registeredUser = await authService.register(req.body);
     if (registeredUser) {
-      const accessToken = JWTToken.createJwtToken(registeredUser, res);
-
-      res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(registeredUser);
-    } else {
-      res.status(400).send("Please try to register again");
+      const accessToken = JWTToken.createJwtToken(registeredUser);
+      res.cookie("jwt", accessToken, { sameSite: 'none', secure: true });
+      return res.send(registeredUser);
     }
-  } catch (err) {
-    res.status(400).send("Error!");
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
-    if(!req.body){
-      res.status(400).send("Bad request");
-    }
-    const usedDTO = false;
-    const loggedInUser = await authService.login(req.body,usedDTO);
+    const loggedInUser = await authService.login(req.body);
 
     if (loggedInUser) {
-      const accessToken = JWTToken.createJwtToken(loggedInUser, res);
-
-      res.cookie("jwt", accessToken, { httpOnly: true });
-      res.send(loggedInUser);
-    } else {
-      res.status(400).send("Incorrect username or password");
+      const accessToken = JWTToken.createJwtToken(loggedInUser);
+      res.cookie("jwt", accessToken, { sameSite: 'none' , secure: true  });
+      return res.send(loggedInUser);
     }
-  } catch (err) {
-    res.status(400).send("Error!");
+  } catch (error) {
+   next(error);
   }
 };
+

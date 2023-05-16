@@ -2,38 +2,27 @@ const password = require("../utils/hashingPassword");
 const userInfo = require("../utils/userInfoValidation");
 const userService = require("../service/userService");
 
-('use strict');
+("use strict");
 
 exports.register = async (user) => {
-  try {
-    const result = await userService.createUser(user);
-    return result;
-  } catch (error) {
-    return {
-      status: 400,
-      message: ` It's a ${error.name}`,
-    };
-  }
+    const createdUser = await userService.createUser(user);
+    return createdUser;
 };
 
-exports.login = async (user, usedDTO) => {
-  try {
-    const infoValid = userInfo.userInfoValidation(user);
-    if (!infoValid.validity) return { status: 400, message: infoValid.message };
-    const username = user.username.toLowerCase();
 
-    const checkedUser = await userService.getUserByUsername(username, usedDTO);
+exports.login = async (user) => {
+    const checkedUser = await userService.getUserByUsername(user.username.toLowerCase());
+
     if (checkedUser.message) {
-      const isPasswordMatched = await password.checkPassword(user.password,checkedUser.message.password);
+      const isPasswordMatched = await password.checkPassword(
+        user.password,
+        checkedUser.message.password
+      );
       if (!isPasswordMatched) {
-        return false;
+        throw Object.assign(new Error("Your password isn't correct!"), {
+          statusCode: 401,
+        });
       }
       return checkedUser;
-    } 
-  } catch (error) {
-    return {
-      status: 401,
-      message: `It's a  ${error.name}`,
-    };
-  }
+    }
 };
